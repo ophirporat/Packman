@@ -6,6 +6,7 @@ var pac_color;
 var start_time;
 var time_elapsed;
 var interval;
+var currPage = 'welcomePage';
 
 $(document).ready(function() {
     context = canvas.getContext("2d");
@@ -171,10 +172,13 @@ function UpdatePosition() {
     }
 }
 
-function showAndHide(divId) {
-    $("#" + divId).show();
+function switchDivs(divId) {
+    $('#' + currPage).hide();
+    currPage = divId
+    $('#' + divId).show()
 }
 
+
 function hide(divId) {
-    $("#" + divId).hide();
+    $('#' + divId).hide();
 }
