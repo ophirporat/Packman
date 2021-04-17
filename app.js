@@ -21,18 +21,20 @@ function Start() {
     var food_remain = 50;
     var pacman_remain = 1;
     start_time = new Date();
+    var obsticals = [Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9)]
     for (var i = 0; i < 10; i++) {
         board[i] = new Array();
-        //put obstacles in (i=3,j=3) and (i=3,j=4) and (i=3,j=5), (i=6,j=1) and (i=6,j=2)
         for (var j = 0; j < 10; j++) {
             if (
-                (i == 3 && j == 3) ||
-                (i == 3 && j == 4) ||
-                (i == 3 && j == 5) ||
-                (i == 6 && j == 1) ||
-                (i == 6 && j == 2)
+                (i == obsticals[0] && j == obsticals[1]) ||
+                (i == obsticals[2] && j == obsticals[3])
             ) {
                 board[i][j] = 4;
+                let randomDirection = Math.floor(Math.random() * 4) + 1
+                if (randomDirection == 1 && i > 0) { board[i - 1][j] = 4 } else if (randomDirection == 2 && j < 9) { board[i][j + 1] = 4 }
+                // else if (randomDirection == 3 && i < 9) { board[i + 1][j] = 4 }
+                else if (randomDirection == 4 && j > 0) { board[i][j - 1] = 4 }
+                continue;
             } else {
                 var randomNum = Math.random();
                 if (randomNum <= (1.0 * food_remain) / cnt) {
