@@ -1,21 +1,75 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<script src="./jquery-3.4.1.slim.min.js"></script>
-		<script type="text/javascript" src="./app.js"></script>
-	</head>
 
-	<body>
-		<div id="score">
-			<label for="lblScore">SCORE:</label>
-			<input id="lblScore" type="text" />
-		</div>
-		<div id="time">
-			<label for="lblTime">TIME:</label>
-			<input id="lblTime" type="text" />
-		</div>
-		<div id="game">
-			<canvas id="canvas" height="600" width="600"></canvas>
-		</div>
-	</body>
+<head>
+    <script src="./jquery-3.4.1.slim.min.js"></script>
+    <script type="text/javascript" src="./app.js"></script>
+</head>
+
+<body>
+    <div id="header">
+        <div class="logo">
+        </div>
+    </div>
+
+    <div id="menu">
+
+        <div class="menuitems">
+            <li><a href="#welcomePage">welcome</a></li>
+            <li><a href="#registerPage">Register</a></li>
+            <li><a href="#loginPage">Login</a></li>
+            <li><a href="#aboutPage"> About</a></li>
+
+        </div>
+
+        <div id="content">
+            <div id="welcomePage">
+                <div class="logo">
+                </div>
+                <button id="register">Register</button>
+                <button id="login">Login</button>
+
+
+            </div>
+
+            <div id="registerPage">
+
+            </div>
+
+            <div id="loginPage">
+
+            </div>
+
+            <div id="settingsPage">
+
+            </div>
+
+            <div id="aboutPage">
+
+            </div>
+
+            <div id="gamePage">
+
+                <div id="score">
+                    <label for="lblScore">SCORE:</label>
+                    <input id="lblScore" type="text" />
+                </div>
+                <div id="time">
+                    <label for="lblTime">TIME:</label>
+                    <input id="lblTime" type="text" />
+                </div>
+                <div id="game">
+                    <canvas id="canvas" height="600" width="600"></canvas>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="footer">
+
+        </div>
+
+</body>
+
 </html>
