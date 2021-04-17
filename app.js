@@ -185,7 +185,7 @@ function hide(divId) {
     $('#' + divId).hide();
 }
 
-/* birthDay form */
+/* birthDate form */
 
 var Days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // index => month [0-11]
 $(document).ready(function() {
