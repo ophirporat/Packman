@@ -16,7 +16,7 @@
 
         <div class="menuitems">
             <li><a href="#welcomePage">welcome</a></li>
-            <li><a href="#registerPage">Register</a></li>
+            <li onclick="switchDivs('registerPage')">Register</li>
             <li><a href="#loginPage">Login</a></li>
             <li><a href="#aboutPage"> About</a></li>
 
@@ -26,14 +26,16 @@
             <div id="welcomePage">
                 <div class="logo">
                 </div>
-                <button id="register">Register</button>
+                <button id="register" onclick="show('registerPage')">Register</button>
                 <button id="login">Login</button>
 
 
             </div>
 
-            <div id="registerPage">
-
+            <div style="display: none;" id="registerPage">
+                <p>
+                    "heyyyyyyyyyyyyyyy"
+                </p>
             </div>
 
             <div id="loginPage">
