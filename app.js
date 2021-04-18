@@ -12,6 +12,7 @@ var monsters;
 var color1;
 var color2;
 var color3;
+// var settings = {}
 var users = [
     ['k', '1234']
 ];
@@ -38,9 +39,9 @@ function Start() {
                 (i == obsticals[2] && j == obsticals[3])
             ) {
                 board[i][j] = 4;
-                let randomDirection = Math.floor(Math.random() * 4) + 1
+                let randomDirection = Math.floor(Math.random() * 3) + 1
                 if (randomDirection == 1 && i > 0) { board[i - 1][j] = 4 } else if (randomDirection == 2 && j < 9) { board[i][j + 1] = 4 }
-                // else if (randomDirection == 3 && i < 9) { board[i + 1][j] = 4 }
+                //  else if (randomDirection == 3 && i < 9) { board[i + 1][j] = 4 } 
                 else if (randomDirection == 4 && j > 0) { board[i][j - 1] = 4 }
                 continue;
             } else {
@@ -66,14 +67,14 @@ function Start() {
         food_remain--;
     }
     keysDown = {};
-    document.getElementById("gamePage").addEventListener(
+    document.addEventListener(
         "keydown",
         function(e) {
             keysDown[e.keyCode] = true;
         },
         false
     );
-    document.getElementById("gamePage").addEventListener(
+    document.addEventListener(
         "keyup",
         function(e) {
             keysDown[e.keyCode] = false;
@@ -94,16 +95,16 @@ function findRandomEmptyCell(board) {
 }
 
 function GetKeyPressed() {
-    if (keysDown[38]) {
+    if (keysDown[38]) { //left
         return 1;
     }
-    if (keysDown[40]) {
+    if (keysDown[40]) { //right
         return 2;
     }
-    if (keysDown[37]) {
+    if (keysDown[37]) { //up
         return 3;
     }
-    if (keysDown[39]) {
+    if (keysDown[39]) { //down
         return 4;
     }
 }
@@ -284,11 +285,18 @@ function change_month(select) {
 }
 
 function updateGridDetails() {
-    upkey = document.getElementById("up").value;
-    if (key.length < 2) alert("defult key chosen for " + key)
-    down = document.getElementById("down").value;
-    leftkey = document.getElementById("left").value;
-    rightkey = document.getElementById("rigth").value;
+    var upkey = document.getElementById("up").value;
+    let valid = checkKeyValidation(upkey, "up")
+    if (!valid) return false;
+    var downkey = document.getElementById("down").value;
+    valid = checkKeyValidation(downkey, "down")
+    if (!valid) return false;
+    var leftkey = document.getElementById("left").value;
+    valid = checkKeyValidation(leftkey, "left")
+    if (!valid) return false;
+    var rightkey = document.getElementById("right").value;
+    valid = checkKeyValidation(rightkey, "right")
+    if (!valid) return false;
     food_remain = document.getElementById("foodNum").value;
     if (food_remain == null) food_remain = Math.floor(Math.random() * (90 - 50 + 1)) + 50; //change in other functions
     monsters = document.getElementById("monstersNum").value;
@@ -296,12 +304,39 @@ function updateGridDetails() {
     color1 = document.getElementById("ball1").value;
     color2 = document.getElementById("ball2").value;
     color3 = document.getElementById("ball3").value;
+    switchDivs("gamePage")
+    return true;
 }
+//     if (keysDown[38]) { //left
+// return 1;
+// }
+// if (keysDown[40]) {//right
+// 	return 2;
+// }
+// if (keysDown[37]) {//up
+// 	return 3;
+// }
+// if (keysDown[39]) {//down
+// 	return 4;
+function checkKeyValidation(key, role) {
+    if (key.length == 1) {
+        if (role == 'up') upkey = key.keyCode;
+        else if (role == 'down') downkey = key.keyCode;
+        else if (role == 'left') leftkey = key.keyCode;
+        else if (role == 'right') rigthkey = key.keyCode;
+        return true;
+    } //check with non letters input
+    else if (key.length == 0) {
+        alert("defult key chosen for " + role + " key");
+        if (role == 'up') upkey = 37
+        else if (role == 'down') downkey = 39
+        else if (role == 'left') leftkey = 38
+        else if (role == 'right') rigthkey = 40
+        return true;
 
-function checkKeyValidation(key) {
-    // if (key.length < 2) continue; //check with non letters input
-    // else if (key.length === 0) alert("defult key chosen for " + key);
-    // else alert("invalid output for " + key);
+    } else {}
+    //  alert("invalid output for " + role + " key")};
+    return false;
 }
 
 const passwordValidation = new RegExp("(?=.[0-9])(?=.[a-zA-Z]).{6,}");
@@ -315,7 +350,7 @@ function validateFormAndLogin() {
     validation &= validateUsernamePassword();
 
     if (validation) {
-        switchDivs('gamePage');
+        switchDivs('settingsPage');
         return true;
     } else {
         return false;
