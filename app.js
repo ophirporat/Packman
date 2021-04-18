@@ -7,6 +7,14 @@ var start_time;
 var time_elapsed;
 var interval;
 var currPage = 'welcomePage';
+var food_remain = 50;
+var monsters;
+var color1;
+var color2;
+var color3;
+var users = [
+    ['k', '1234']
+];
 
 $(document).ready(function() {
     context = canvas.getContext("2d");
@@ -18,7 +26,7 @@ function Start() {
     score = 0;
     pac_color = "yellow";
     var cnt = 100;
-    var food_remain = 50;
+
     var pacman_remain = 1;
     start_time = new Date();
     var obsticals = [Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9)]
@@ -58,14 +66,14 @@ function Start() {
         food_remain--;
     }
     keysDown = {};
-    addEventListener(
+    document.getElementById("gamePage").addEventListener(
         "keydown",
         function(e) {
             keysDown[e.keyCode] = true;
         },
         false
     );
-    addEventListener(
+    document.getElementById("gamePage").addEventListener(
         "keyup",
         function(e) {
             keysDown[e.keyCode] = false;
@@ -185,7 +193,7 @@ function hide(divId) {
     $('#' + divId).hide();
 }
 
-/* birthDate form */
+/* birthDay form */
 
 var Days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // index => month [0-11]
 $(document).ready(function() {
@@ -273,4 +281,85 @@ function change_month(select) {
         val = 1;
     }
     $(day).val(val);
+}
+
+function updateGridDetails() {
+    upkey = document.getElementById("up").value;
+    if (key.length < 2) alert("defult key chosen for " + key)
+    down = document.getElementById("down").value;
+    leftkey = document.getElementById("left").value;
+    rightkey = document.getElementById("rigth").value;
+    food_remain = document.getElementById("foodNum").value;
+    if (food_remain == null) food_remain = Math.floor(Math.random() * (90 - 50 + 1)) + 50; //change in other functions
+    monsters = document.getElementById("monstersNum").value;
+    if (monsters == null) monsters = Math.floor(Math.random * 4) + 1;
+    color1 = document.getElementById("ball1").value;
+    color2 = document.getElementById("ball2").value;
+    color3 = document.getElementById("ball3").value;
+}
+
+function checkKeyValidation(key) {
+    // if (key.length < 2) continue; //check with non letters input
+    // else if (key.length === 0) alert("defult key chosen for " + key);
+    // else alert("invalid output for " + key);
+}
+
+const passwordValidation = new RegExp("(?=.[0-9])(?=.[a-zA-Z]).{6,}");
+const nameValidation = new RegExp("![^a-zA-Z]");
+const emailValidation = new RegExp("[S+@S+.S+]");
+
+/* login */
+
+function validateFormAndLogin() {
+    var validation = true;
+    validation &= validateUsernamePassword();
+
+    if (validation) {
+        switchDivs('gamePage');
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function validateUsernamePassword() {
+    var username = $('#uname').val();
+    var password = $('#pass').val();
+
+
+    if (username == "") {
+        alert("Login failed, Please enter your username");
+        return false;
+    }
+
+    var validUserName = "";
+    var validPassword = "";
+    for (var i = 0; i < users.length; i++) {
+        if (users[i][0] == username) {
+            validUserName = users[i][0];
+
+            if (users[i][1] == password) {
+                validPassword = users[i][1];
+                break;
+            }
+
+        }
+    }
+    if (validUserName != "") {
+        if (password == "") {
+            alert("Login failed, Please enter your password");
+            return false;
+
+        } else if (validPassword == "") {
+            alert("Login failed, Password is incorrect");
+            return false;
+
+        } else {
+            return true;
+        }
+    } else {
+        alert("Login failed, Username Incorrect");
+        return false;
+    }
+
 }
