@@ -10,19 +10,20 @@
 <body>
     <div id="header">
         <div class="logo">
+
         </div>
     </div>
 
     <div id="menu">
-
-        <div class="menuitems">
+        <ul>
             <li onclick="switchDivs('settingsPage')">game</li>
             <li onclick="switchDivs('welcomePage')">welcome</li>
             <li onclick="switchDivs('registerPage')">Register</li>
             <li onclick="switchDivs('loginPage')"> Login</li>
             <li onclick="switchDivs('aboutPage')">About</li>
+        </ul>
 
-        </div>
+
     </div>
 
     <div id="content">
@@ -42,102 +43,100 @@
 
                     <label for="username"><b>UserName</b></label>
                     <input type="text" placeholder="Enter User Name" name="username" id="username" required>
-
+                    <br/>
                     <label for="password"><b>Password</b></label>
                     <input type="password" placeholder="Enter Password" name="password" id="password" required>
-
+                    <br/>
                     <label for="fullName"><b>Full Name</b></label>
                     <input type="text" placeholder="Enter Your Name" name="fullName" id="fullName" required>
-
+                    <br/>
                     <label for="email"><b>Email</b></label>
                     <input type="text" placeholder="Enter Email" name="email" id="email" required>
-
+                    <br/>
                     <label for="birthday"><b>Date of Birth</label>
-                    <label>birthday:
-							<br/>
-							<br/>
-                        <SELECT id="year" name="yyyy" onchange="change_year(this)">
+                    <SELECT id="year" name="yyyy" onchange="change_year(this)">
 								</SELECT>
-                        <SELECT id="month" name="mm" onchange="change_month(this)">
+                    <SELECT id="month" name="mm" onchange="change_month(this)">
 								</SELECT>
-                        <SELECT id="day" name="dd">
+                    <SELECT id="day" name="dd">
 								</SELECT>
-                        <br />
-                        <button type="submit" class="registerbtn" onclick="checkForm()">Register</button>
-                    </div>
-
-                    <div class="container signin">
-                        <p>Already have an account? <ul onclick="switchDivs('loginPage')">Sign in</ul></p>
-                    </div>
-				</div>
-			</form>
-
-		</div>
-
-		<div style="display: none;" id="loginPage">
-
-			<label for="pass"><b>UserName</b></label>
-
-                    <input type="text" placeholder="Enter Username" id="uname" name="uname" required>
-
-                    <label for="pass"><b>Password</b></label>
-                    <input type="password" placeholder="Enter Password" id="pass" name="pass" required>
-
-                    <button type="submit" onclick="validateFormAndLogin()">Login</button>
-
-                    <button type="button" class="cancelbtn">Cancel</button>
-                    <span class="psw">Forgot <a href="#">password?</a></span>
-
-
+                    <br />
+                    <button type="submit" class="registerbtn" onclick="checkForm()">Register</button>
                 </div>
 
-                <div style="display: none;" id="settingsPage">
-                    <label for="gameBottoms :">Game Bottoms:</label>
-                    <input type="text" id="up" name="up">
-                    <input type="text" id="down" name="down">
-                    <input type="text" id="left" name="left">
-                    <input type="text" id="right" name="right"><br>
-                    <label id="num of food">num of food:</label>
-                    <input type="number" id="foodNum" name="foodNum">
-                    <p> <label for="colors">Choose your food colors:</label>
-                        <input type="color" id="ball1" name="ball1" value="#FFD700">
-                        <label for="ball1">ball1</label>
-                        <input type="color" id="ball2" name="ball2" value="#00BFFF">
-                        <label for="ball2">ball2</label>
-                        <input type="color" id="ball3" name="ball3" value="#8B008B">
-                        <label for="ball2">ball3</label></p>
-                    <label for="num of monsters">num of food:</label>
-                    <input type="number" id="monstersNum" name="monstersNum"><br>
-                    <button onclick="updateGridDetails();"> submit</button>
-                    <button onclick="updateGridDetails()"> randomize</button>
-
+                <div class="container signin">
+                    <p>Already have an account?
+                        <ul onclick="switchDivs('loginPage')">Sign in</ul>
+                    </p>
                 </div>
+        </div>
+        </form>
 
-                <div style="display: none;" id="aboutPage">
+        <div style="display: none;" id="loginPage">
 
-                </div>
-
-                <div style="display: none;" id="gamePage">
-
-                    <div id="score">
-                        <label for="lblScore">SCORE:</label>
-                        <input id="lblScore" type="text" />
-                    </div>
-                    <div id="time">
-                        <label for="lblTime">TIME:</label>
-                        <input id="lblTime" type="text" />
-                    </div>
-                    <div id="game">
-                        <canvas id="canvas" height="600" width="600"></canvas>
-                    </div>
-
-                </div>
+            <label for="pass"><b>UserName</b></label>
+            <input type="text" placeholder="Enter Username" id="uname" name="uname" required>
+            <br/>
+            <label for="pass"><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" id="pass" name="pass" required>
+            <br/>
+            <button type="submit" onclick="validateFormAndLogin()">Login</button>
+            <button type="button" class="cancelbtn">Cancel</button>
+            <br/>
+            <span class="psw">Forgot <a href="#">password?</a></span>
+            <br/>
 
         </div>
 
-        <div id="footer">
+        <div style="display: none;" id="settingsPage">
+            <label for="gameBottoms :">Game Bottoms:</label>
+            <input type="text" id="up" name="up">
+            <input type="text" id="down" name="down">
+            <input type="text" id="left" name="left">
+            <input type="text" id="right" name="right"><br>
+            <label id="num of food">num of food:</label>
+            <input type="number" id="foodNum" name="foodNum">
+            <p> <label for="colors">Choose your food colors:</label>
+                <input type="color" id="ball1" name="ball1" value="#FFD700">
+                <label for="ball1">ball1</label>
+                <input type="color" id="ball2" name="ball2" value="#00BFFF">
+                <label for="ball2">ball2</label>
+                <input type="color" id="ball3" name="ball3" value="#8B008B">
+                <label for="ball2">ball3</label></p>
+            <label for="num of monsters">num of food:</label>
+            <input type="number" id="monstersNum" name="monstersNum"><br>
+            <button onclick="updateGridDetails();"> submit</button>
+            <button onclick="updateGridDetails()"> randomize</button>
 
         </div>
+
+        <div style="display: none;" id="aboutPage">
+
+        </div>
+
+        <div style="display: none;" id="gamePage">
+
+            <div id="score">
+                <label for="lblScore">SCORE:</label>
+                <input id="lblScore" type="text" />
+            </div>
+            <div id="time">
+                <label for="lblTime">TIME:</label>
+                <input id="lblTime" type="text" />
+            </div>
+            <div id="game">
+                <canvas id="canvas" height="600" width="600"></canvas>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="footer">
+    </div>
+
+    </div>
+
 
 </body>
 
