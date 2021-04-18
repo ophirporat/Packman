@@ -1,9 +1,51 @@
-.menuitems {
+body {
+    align-items: center;
+}
+
+#content {
+    width: 50%;
+    margin-top: 80px;
+    border-style: solid;
+}
+
+div {}
+
+ul {
+    list-style-type: none;
+    margin: 10px;
+    padding: 0;
+    background-color: white;
+    font-size: x-large;
+}
+
+li {
+    display: inline;
+    margin: 10px;
+    cursor: pointer;
+}
+
+li:hover {
+    font-weight: bold;
+}
+
+#register,
+#login {
     display: inline-block;
+    margin-top: 200px;
+    align-items: center;
+}
+
+button {
+    cursor: pointer;
+    align-self: center;
 }
 
 
 /**** register form ****/
+
+#registerPage {
+    width: 100%;
+}
 
 * {
     box-sizing: border-box
@@ -21,7 +63,7 @@
 
 input[type=text],
 input[type=password] {
-    width: 100%;
+    width: 30%;
     padding: 15px;
     margin: 5px 0 22px 0;
     display: inline-block;
