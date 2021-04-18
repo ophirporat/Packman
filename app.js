@@ -12,6 +12,10 @@ var monsters;
 var color1;
 var color2;
 var color3;
+var upkey;
+var downkey;
+var rightkey;
+var leftkey;
 // var settings = {}
 var users = [
     ['k', '1234']
@@ -22,12 +26,11 @@ $(document).ready(function() {
     Start();
 });
 
-function Start() {
+function StartGame() {
     board = new Array();
     score = 0;
     pac_color = "yellow";
     var cnt = 100;
-
     var pacman_remain = 1;
     start_time = new Date();
     var obsticals = [Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9)]
@@ -66,7 +69,7 @@ function Start() {
         board[emptyCell[0]][emptyCell[1]] = 1;
         food_remain--;
     }
-    keysDown = {};
+    keysDown = { leftkey: false, rigthkey: false, upkey: false, downkey: false };
     document.addEventListener(
         "keydown",
         function(e) {
@@ -95,16 +98,16 @@ function findRandomEmptyCell(board) {
 }
 
 function GetKeyPressed() {
-    if (keysDown[38]) { //left
+    if (keysDown[upkey]) { //left
         return 1;
     }
-    if (keysDown[40]) { //right
+    if (keysDown[downkey]) { //right
         return 2;
     }
-    if (keysDown[37]) { //up
+    if (keysDown[leftkey]) { //up
         return 3;
     }
-    if (keysDown[39]) { //down
+    if (keysDown[rightkey]) { //down
         return 4;
     }
 }
@@ -298,12 +301,13 @@ function updateGridDetails() {
     valid = checkKeyValidation(rightkey, "right")
     if (!valid) return false;
     food_remain = document.getElementById("foodNum").value;
-    if (food_remain == null) food_remain = Math.floor(Math.random() * (90 - 50 + 1)) + 50; //change in other functions
+    if (food_remain.length == 0) food_remain = Math.floor(Math.random() * (90 - 50 + 1)) + 50; //change in other functions
     monsters = document.getElementById("monstersNum").value;
-    if (monsters == null) monsters = Math.floor(Math.random * 4) + 1;
+    if (monsters.length == 0) monsters = Math.floor(Math.random * 4) + 1;
     color1 = document.getElementById("ball1").value;
     color2 = document.getElementById("ball2").value;
     color3 = document.getElementById("ball3").value;
+    StartGame()
     switchDivs("gamePage")
     return true;
 }
@@ -320,10 +324,10 @@ function updateGridDetails() {
 // 	return 4;
 function checkKeyValidation(key, role) {
     if (key.length == 1) {
-        if (role == 'up') upkey = key.keyCode;
-        else if (role == 'down') downkey = key.keyCode;
-        else if (role == 'left') leftkey = key.keyCode;
-        else if (role == 'right') rigthkey = key.keyCode;
+        if (role == 'up') upkey = getKeyCode(key)
+        else if (role == 'down') downkey = getKeyCode(key)
+        else if (role == 'left') leftkey = getKeyCode(key)
+        else if (role == 'right') rightkey = getKeyCode(key)
         return true;
     } //check with non letters input
     else if (key.length == 0) {
@@ -337,6 +341,14 @@ function checkKeyValidation(key, role) {
     } else {}
     //  alert("invalid output for " + role + " key")};
     return false;
+}
+
+function getKeyCode(char) {
+    var keyCode = char.charCodeAt(0);
+    if (keyCode > 90) { // 90 is keyCode for 'z'
+        return keyCode - 32;
+    }
+    return keyCode;
 }
 
 const passwordValidation = new RegExp("(?=.[0-9])(?=.[a-zA-Z]).{6,}");
