@@ -1,21 +1,44 @@
 body {
-    align-items: center;
+    width: 50%;
+    height: 60%;
+    position: relative;
+    margin-left: 25%;
+    margin-right: 25%;
+    text-align: center;
+    font-family: 'Play', sans-serif;
 }
 
 #content {
-    width: 50%;
     margin-top: 80px;
-    border-style: solid;
+    /* border-style: solid; */
+    place-items: center stretch;
 }
 
-div {}
+button {
+    cursor: pointer;
+    align-self: center;
+    background-color: #fffc56;
+    color: black;
+    padding: 10px 20px;
+    margin: 8px 10px;
+    border: none;
+    opacity: 0.9;
+}
+
+button:hover {
+    opacity: 0.5;
+}
+
+
+/* menu-items */
 
 ul {
     list-style-type: none;
     margin: 10px;
+    margin-top: 30px;
     padding: 0;
     background-color: white;
-    font-size: x-large;
+    font-size: 20px;
 }
 
 li {
@@ -28,20 +51,22 @@ li:hover {
     font-weight: bold;
 }
 
+
+/*welcome-page */
+
+label {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
 #register,
 #login {
     display: inline-block;
-    margin-top: 200px;
-    align-items: center;
-}
-
-button {
-    cursor: pointer;
-    align-self: center;
+    /* margin-top: 200px; */
 }
 
 
-/**** register form ****/
+/* register form */
 
 #registerPage {
     width: 100%;
@@ -54,12 +79,10 @@ button {
 
 /* Add padding to containers */
 
-.container {
+
+/* .container {
     padding: 16px;
-}
-
-
-/* Full-width input fields */
+} */
 
 input[type=text],
 input[type=password] {
@@ -69,12 +92,6 @@ input[type=password] {
     display: inline-block;
     border: none;
     background: #f1f1f1;
-}
-
-input[type=text]:focus,
-input[type=password]:focus {
-    background-color: #ddd;
-    outline: none;
 }
 
 
@@ -88,26 +105,19 @@ hr {
 
 /* Set a style for the submit/register button */
 
-.registerbtn {
+
+/* .registerbtn {
     background-color: #4CAF50;
     color: white;
     padding: 16px 20px;
     margin: 8px 0;
     border: none;
     cursor: pointer;
-    width: 100%;
     opacity: 0.9;
-}
+} */
 
 .registerbtn:hover {
     opacity: 1;
-}
-
-
-/* Add a blue text color to links */
-
-a {
-    color: dodgerblue;
 }
 
 
@@ -116,4 +126,23 @@ a {
 .signin {
     background-color: #f1f1f1;
     text-align: center;
+}
+
+
+/* settings-page */
+
+#settingsPage {
+    margin-bottom: 15px;
+}
+
+#up,
+#down,
+#left,
+#right {
+    width: 5%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
 }
