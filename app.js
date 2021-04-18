@@ -16,7 +16,9 @@ var upkey;
 var downkey;
 var rightkey;
 var leftkey;
-// var settings = {}
+var randomBall = 0;
+var balls = [food_remain - (Math.floor(food_remain * 0.3) + Math.floor(food_remain * 0.1)), Math.floor(food_remain * 0.3), Math.floor(food_remain * 0.1)]
+    // var settings = {}
 var users = [
     ['k', '1234']
 ];
@@ -34,6 +36,8 @@ function StartGame() {
     var pacman_remain = 1;
     start_time = new Date();
     var obsticals = [Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9)]
+
+
     for (var i = 0; i < 10; i++) {
         board[i] = new Array();
         for (var j = 0; j < 10; j++) {
@@ -51,7 +55,13 @@ function StartGame() {
                 var randomNum = Math.random();
                 if (randomNum <= (1.0 * food_remain) / cnt) {
                     food_remain--;
-                    board[i][j] = 1;
+                    randomBall = getNextBall();
+                    if (randomBall == 0) board[i][j] = 1;
+                    else if (randomBall == 1) board[i][j] = 3;
+                    else if (randomBall == 2) board[i][j] = 5;
+                    balls[randomBall]--;
+
+                    // board[i][j] = 1;
                 } else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) {
                     shape.i = i;
                     shape.j = j;
@@ -87,6 +97,21 @@ function StartGame() {
     interval = setInterval(UpdatePosition, 250);
 }
 
+function getNextBall() {
+    if (randomBall == 2) randomBall = 0;
+    if (balls[randomBall] == 0) {
+        if (randomBall < 2) randomBall++;
+        else randomBall = 0;
+        return getNextBall()
+
+    } else {
+        randomBall++;
+
+        return randomBall;
+    }
+
+}
+
 function findRandomEmptyCell(board) {
     var i = Math.floor(Math.random() * 9 + 1);
     var j = Math.floor(Math.random() * 9 + 1);
@@ -97,17 +122,17 @@ function findRandomEmptyCell(board) {
     return [i, j];
 }
 
-function GetKeyPressed() {
-    if (keysDown[upkey]) { //left
+function GetKeyPressed() { // fix direction with letters!!!!
+    if (keysDown[leftkey]) { //left
         return 1;
     }
-    if (keysDown[downkey]) { //right
+    if (keysDown[rightkey]) { //right
         return 2;
     }
-    if (keysDown[leftkey]) { //up
+    if (keysDown[upkey]) { //up
         return 3;
     }
-    if (keysDown[rightkey]) { //down
+    if (keysDown[downkey]) { //down
         return 4;
     }
 }
@@ -121,7 +146,7 @@ function Draw() {
             var center = new Object();
             center.x = i * 60 + 30;
             center.y = j * 60 + 30;
-            if (board[i][j] == 2) {
+            if (board[i][j] == 2) { //pacman
                 context.beginPath();
                 context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
                 context.lineTo(center.x, center.y);
@@ -131,10 +156,21 @@ function Draw() {
                 context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
                 context.fillStyle = "black"; //color
                 context.fill();
-            } else if (board[i][j] == 1) {
+            } else if (board[i][j] == 1) { //balls
                 context.beginPath();
                 context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
-                context.fillStyle = "black"; //color
+                context.fillStyle = color1; //color
+                context.fill();
+
+            } else if (board[i][j] == 3) { //balls
+                context.beginPath();
+                context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
+                context.fillStyle = color2; //color
+                context.fill();
+            } else if (board[i][j] == 5) { //balls
+                context.beginPath();
+                context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
+                context.fillStyle = color3; //color
                 context.fill();
             } else if (board[i][j] == 4) {
                 context.beginPath();
@@ -301,9 +337,21 @@ function updateGridDetails() {
     valid = checkKeyValidation(rightkey, "right")
     if (!valid) return false;
     food_remain = document.getElementById("foodNum").value;
-    if (food_remain.length == 0) food_remain = Math.floor(Math.random() * (90 - 50 + 1)) + 50; //change in other functions
+    if (food_remain.length == 0) {
+        food_remain = Math.floor(Math.random() * (90 - 50 + 1)) + 50; //change in other functions 
+        // alert("number of monsters chosen randomly")
+    } else if (food_remain > 90 || food_remain < 50) {
+        alert("food is between 50 to 90")
+        return false;
+    }
     monsters = document.getElementById("monstersNum").value;
-    if (monsters.length == 0) monsters = Math.floor(Math.random * 4) + 1;
+    if (monsters.length == 0) {
+        monsters = Math.floor(Math.random * 4) + 1;
+        // alert("number of monsters chosen randomly")
+    } else if (monsters > 90 || monsters < 50) {
+        // alert("monsters is between 1 to 4")
+        return false;
+    }
     color1 = document.getElementById("ball1").value;
     color2 = document.getElementById("ball2").value;
     color3 = document.getElementById("ball3").value;
@@ -311,19 +359,35 @@ function updateGridDetails() {
     switchDivs("gamePage")
     return true;
 }
-//     if (keysDown[38]) { //left
-// return 1;
-// }
-// if (keysDown[40]) {//right
-// 	return 2;
-// }
-// if (keysDown[37]) {//up
-// 	return 3;
-// }
-// if (keysDown[39]) {//down
-// 	return 4;
+
+function randomize() {
+    upkey = 38;
+    downkey = 40
+    leftkey = 37;
+    rigthkey = 39;
+    food_remain = Math.floor(Math.random() * (90 - 50 + 1)) + 50; //change in other functions 
+    monsters = Math.floor(Math.random * 4) + 1;
+    color1 = getRandomColor();
+    color2 = getRandomColor();
+    color3 = getRandomColor();
+    StartGame()
+    switchDivs("gamePage")
+    return true;
+
+}
+
+function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
 function checkKeyValidation(key, role) {
     if (key.length == 1) {
+        // if((/[0-9a-zA-Z]+$/).test(key))
         if (role == 'up') upkey = getKeyCode(key)
         else if (role == 'down') downkey = getKeyCode(key)
         else if (role == 'left') leftkey = getKeyCode(key)
@@ -331,11 +395,11 @@ function checkKeyValidation(key, role) {
         return true;
     } //check with non letters input
     else if (key.length == 0) {
-        alert("defult key chosen for " + role + " key");
-        if (role == 'up') upkey = 37
-        else if (role == 'down') downkey = 39
-        else if (role == 'left') leftkey = 38
-        else if (role == 'right') rigthkey = 40
+        // alert("defult key chosen for " + role + " key");
+        if (role == 'up') upkey = 38
+        else if (role == 'down') downkey = 40
+        else if (role == 'left') leftkey = 37
+        else if (role == 'right') rigthkey = 39
         return true;
 
     } else {}
