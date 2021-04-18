@@ -3,8 +3,13 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Play&display=swap" rel="stylesheet">
+
     <script src="./jquery-3.4.1.slim.min.js"></script>
     <script type="text/javascript" src="./app.js"></script>
+
 </head>
 
 <body>
@@ -28,6 +33,11 @@
 
     <div id="content">
         <div id="welcomePage">
+            <h1>
+                Welcome to the best <br/> PACMAN Game
+            </h1>
+            <br/>
+            <br/>
             <div class="logo"> </div>
             <button id="register" onclick="switchDivs('registerPage')">Register</button>
             <button id="login" onclick="switchDivs('loginPage')">Login</button>
@@ -66,7 +76,7 @@
 
                 <div class="container signin">
                     <p>Already have an account?
-                        <ul onclick="switchDivs('loginPage')">Sign in</ul>
+                        <button onclick="switchDivs('loginPage')">Sign in</button>
                     </p>
                 </div>
         </div>
@@ -74,6 +84,9 @@
 
         <div style="display: none;" id="loginPage">
 
+            <h1>
+                Login
+            </h1>
             <label for="pass"><b>UserName</b></label>
             <input type="text" placeholder="Enter Username" id="uname" name="uname" required>
             <br/>
@@ -81,29 +94,38 @@
             <input type="password" placeholder="Enter Password" id="pass" name="pass" required>
             <br/>
             <button type="submit" onclick="validateFormAndLogin()">Login</button>
-            <button type="button" class="cancelbtn">Cancel</button>
-            <br/>
-            <span class="psw">Forgot <a href="#">password?</a></span>
+            <button type="button" class="cancelbtn" onclick="switchDivs('welcomePage')">Cancel</button>
             <br/>
 
         </div>
 
         <div style="display: none;" id="settingsPage">
-            <label for="gameBottoms :">Game Bottoms:</label>
-            <input type="text" id="up" name="up">
-            <input type="text" id="down" name="down">
-            <input type="text" id="left" name="left">
-            <input type="text" id="right" name="right"><br>
+            <h1>
+                Game Settings
+            </h1>
+            <label for="gameBottoms :">Game Arrows:</label>
+            <i class="material-icons">north</i>
+            <input type="text" maxlength="1" id="up" name="up">
+            <i class="material-icons">south</i>
+            <input type="text" maxlength="1" id="down" name="down">
+            <i class="material-icons">west</i>
+            <input type="text" maxlength="1" id="left" name="left">
+            <i class="material-icons">east	</i>
+            <input type="text" maxlength="1" id="right" name="right">
+            <br/>
             <label id="num of food">num of food:</label>
-            <input type="number" id="foodNum" name="foodNum">
+            <input type="number" id="foodNum" min="50" max="90" name="foodNum">
             <p> <label for="colors">Choose your food colors:</label>
-                <input type="color" id="ball1" name="ball1" value="#FFD700">
+                <br/><br/>
                 <label for="ball1">ball1</label>
-                <input type="color" id="ball2" name="ball2" value="#00BFFF">
+                <input type="color" id="ball1" name="ball1" value="#FFD700">
+                <br/>
                 <label for="ball2">ball2</label>
-                <input type="color" id="ball3" name="ball3" value="#8B008B">
-                <label for="ball2">ball3</label></p>
-            <label for="num of monsters">num of food:</label>
+                <input type="color" id="ball2" name="ball2" value="#00BFFF">
+                <br/>
+                <label for="ball2">ball3</label>
+                <input type="color" id="ball3" name="ball3" value="#8B008B"></p>
+            <label for="num of monsters">num of monsters:</label>
             <input type="number" id="monstersNum" name="monstersNum"><br>
             <button onclick="updateGridDetails();"> submit</button>
             <button onclick="updateGridDetails()"> randomize</button>
@@ -111,6 +133,7 @@
         </div>
 
         <div style="display: none;" id="aboutPage">
+
 
         </div>
 
