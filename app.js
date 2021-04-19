@@ -200,7 +200,7 @@ function UpdatePosition() {
         }
     }
     if (x == 3) {
-        if (shape.i > 0 && board[shape.i - 1][shape.j] != 4) { //down
+        if (shape.i > 0 && board[shape.i - 1][shape.j] != 4) { //down - hey bar
             shape.i--;
         }
     }
