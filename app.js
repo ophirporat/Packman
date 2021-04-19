@@ -22,6 +22,7 @@ var balls = [food_remain - (Math.floor(food_remain * 0.3) + Math.floor(food_rema
 var users = [
     ['k', 'k']
 ];
+//heyyy
 var time_limit;
 var pacman_direction = 1;
 
