@@ -8,6 +8,14 @@ body {
     font-family: 'Play', sans-serif;
 }
 
+
+/* #header {
+    width: 100%;
+    background-image: url("pacman_by_r0maint_d2xp3ug-fullview.jpg");
+    background-repeat: no-repeat;
+    padding: 15px;
+} */
+
 #content {
     margin-top: 80px;
     /* border-style: solid; */
@@ -85,13 +93,19 @@ label {
 } */
 
 input[type=text],
-input[type=password] {
+input[type=password],
+input[type=email],
+select {
     width: 30%;
     padding: 15px;
     margin: 5px 0 22px 0;
     display: inline-block;
     border: none;
     background: #f1f1f1;
+}
+
+select {
+    width: 15%;
 }
 
 
