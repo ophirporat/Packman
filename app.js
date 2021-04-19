@@ -22,9 +22,11 @@ var balls = [food_remain - (Math.floor(food_remain * 0.3) + Math.floor(food_rema
 var users = [
     ['k', 'k']
 ];
+var last_direction = 4;
 //heyyy
 var time_limit;
-var pacman_direction = 1;
+// var pacman_direction = 1;
+var x; //position
 
 $(document).ready(function() {
     context = canvas.getContext("2d");
@@ -150,21 +152,12 @@ function Draw() {
             center.x = i * 60 + 30;
             center.y = j * 60 + 30;
             if (board[i][j] == 2) { //pacman
-                context.beginPath();
-                context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); // half circle
-                context.lineTo(center.x, center.y);
-                context.fillStyle = pac_color; //color
-                context.fill();
-                context.beginPath();
-                context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI); // circle
-                context.fillStyle = "black"; //color
-                context.fill();
+                draw_pacman(x, center);
             } else if (board[i][j] == 1) { //balls
                 context.beginPath();
                 context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
                 context.fillStyle = color1; //color
                 context.fill();
-
             } else if (board[i][j] == 3) { //balls
                 context.beginPath();
                 context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
@@ -185,28 +178,69 @@ function Draw() {
     }
 }
 
+function draw_pacman(direction, center) {
+    context.beginPath();
+    if (direction == undefined) {
+        direction = last_direction;
+    }
+    if (direction == 2) { //down
+        context.arc(center.x, center.y, 30, 0.65 * Math.PI, -1.65 * Math.PI);
+        last_direction = 2;
+    } else if (direction == 3) { //left
+        context.arc(center.x, center.y, 30, 1.15 * Math.PI, -1.15 * Math.PI); ///
+        last_direction = 3;
+    } else if (direction == 4) { //right
+        context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); ///
+        last_direction = 4;
+    } else if (direction == 1) { //up
+        context.arc(center.x, center.y, 30, 1.65 * Math.PI, 1.35 * Math.PI);
+        last_direction = 1;
+    }
+
+    context.lineTo(center.x, center.y);
+    context.fillStyle = pac_color;
+    context.fill();
+    // eye  
+    context.beginPath();
+    if (direction == 2) {
+        context.arc(center.x + 15, center.y + 5, 5, 0, 2 * Math.PI);
+    } else if (direction == 3) {
+        context.arc(center.x - 5, center.y - 15, 5, 0, 2 * Math.PI);
+    } else if (direction == 4) {
+        context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI);
+    } else if (direction == 1) {
+        context.arc(center.x + 15, center.y - 5, 5, 0, 2 * Math.PI);
+        // circle
+    }
+    context.fillStyle = "black"; //color
+    context.fill();
+}
+
 function UpdatePosition() {
     board[shape.i][shape.j] = 0;
-    var x = GetKeyPressed();
+    x = GetKeyPressed();
     if (x == 1) {
-        if (shape.j > 0 && board[shape.i][shape.j - 1] != 4) { //right
+        if (shape.j > 0 && board[shape.i][shape.j - 1] != 4) { //up
             shape.j--;
-
+            console.log("direction 1")
         }
     }
     if (x == 2) {
-        if (shape.j < 9 && board[shape.i][shape.j + 1] != 4) { //left
+        if (shape.j < 9 && board[shape.i][shape.j + 1] != 4) { //down
             shape.j++;
+            console.log("direction 2")
         }
     }
     if (x == 3) {
-        if (shape.i > 0 && board[shape.i - 1][shape.j] != 4) { //down - hey bar
+        if (shape.i > 0 && board[shape.i - 1][shape.j] != 4) { //left
             shape.i--;
+            console.log("direction 3")
         }
     }
     if (x == 4) {
-        if (shape.i < 9 && board[shape.i + 1][shape.j] != 4) { //up
+        if (shape.i < 9 && board[shape.i + 1][shape.j] != 4) { //right
             shape.i++;
+            console.log("direction 4")
         }
     }
     if (board[shape.i][shape.j] == 1) {
@@ -222,9 +256,10 @@ function UpdatePosition() {
     var currentTime = new Date();
     time_elapsed = (currentTime - start_time) / 1000;
     if (score >= 20 && time_elapsed <= 10) {
-        pac_color = "green";
+        // pac_color = "green";
     }
-    if (score >= 100 || time_elapsed >= time_limit) {
+    if (score >= 200 || time_elapsed >= time_limit) {
+        Draw();
         window.clearInterval(interval);
         window.alert("Game completed");
         return;
@@ -357,8 +392,9 @@ function updateGridDetails() {
     }
     time_limit = document.getElementById("timeLeft").value;
     if (time_limit < 60) {
-        alert("minimum time is 60 sec")
-        return false;
+        time_limit = 60;
+        // alert("minimum time is 60 sec")
+        // return false;
     }
     monsters = document.getElementById("monstersNum").value;
     if (monsters.length == 0) {
@@ -406,6 +442,7 @@ function randomize() {
     color1 = getRandomColor();
     color2 = getRandomColor();
     color3 = getRandomColor();
+    time_limit = 60;
     StartGame()
     switchDivs("gamePage")
     return true;
