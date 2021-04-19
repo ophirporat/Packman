@@ -20,8 +20,10 @@ var randomBall = 0;
 var balls = [food_remain - (Math.floor(food_remain * 0.3) + Math.floor(food_remain * 0.1)), Math.floor(food_remain * 0.3), Math.floor(food_remain * 0.1)]
     // var settings = {}
 var users = [
-    ['k', '1234']
+    ['k', 'k']
 ];
+var time_limit;
+var pacman_direction = 1;
 
 $(document).ready(function() {
     context = canvas.getContext("2d");
@@ -79,7 +81,7 @@ function StartGame() {
         board[emptyCell[0]][emptyCell[1]] = 1;
         food_remain--;
     }
-    keysDown = { leftkey: false, rigthkey: false, upkey: false, downkey: false };
+    keysDown = {};
     document.addEventListener(
         "keydown",
         function(e) {
@@ -123,16 +125,16 @@ function findRandomEmptyCell(board) {
 }
 
 function GetKeyPressed() { // fix direction with letters!!!!
-    if (keysDown[leftkey]) { //left
+    if (keysDown[upkey]) { //left
         return 1;
     }
-    if (keysDown[rightkey]) { //right
+    if (keysDown[downkey]) { //right
         return 2;
     }
-    if (keysDown[upkey]) { //up
+    if (keysDown[leftkey]) { //up
         return 3;
     }
-    if (keysDown[downkey]) { //down
+    if (keysDown[rightkey]) { //down
         return 4;
     }
 }
@@ -186,37 +188,45 @@ function UpdatePosition() {
     board[shape.i][shape.j] = 0;
     var x = GetKeyPressed();
     if (x == 1) {
-        if (shape.j > 0 && board[shape.i][shape.j - 1] != 4) {
+        if (shape.j > 0 && board[shape.i][shape.j - 1] != 4) { //right
             shape.j--;
+
         }
     }
     if (x == 2) {
-        if (shape.j < 9 && board[shape.i][shape.j + 1] != 4) {
+        if (shape.j < 9 && board[shape.i][shape.j + 1] != 4) { //left
             shape.j++;
         }
     }
     if (x == 3) {
-        if (shape.i > 0 && board[shape.i - 1][shape.j] != 4) {
+        if (shape.i > 0 && board[shape.i - 1][shape.j] != 4) { //down
             shape.i--;
         }
     }
     if (x == 4) {
-        if (shape.i < 9 && board[shape.i + 1][shape.j] != 4) {
+        if (shape.i < 9 && board[shape.i + 1][shape.j] != 4) { //up
             shape.i++;
         }
     }
     if (board[shape.i][shape.j] == 1) {
-        score++;
+        score += 5;
+    } else if (board[shape.i][shape.j] == 3) {
+        score += 15;
+    }
+    if (board[shape.i][shape.j] == 5) {
+        score += 25;
     }
     board[shape.i][shape.j] = 2;
+    document.getElementById("lblScore").value = score;
     var currentTime = new Date();
     time_elapsed = (currentTime - start_time) / 1000;
     if (score >= 20 && time_elapsed <= 10) {
         pac_color = "green";
     }
-    if (score == 50) {
+    if (score >= 100 || time_elapsed >= time_limit) {
         window.clearInterval(interval);
         window.alert("Game completed");
+        return;
     } else {
         Draw();
     }
@@ -324,24 +334,29 @@ function change_month(select) {
 }
 
 function updateGridDetails() {
-    var upkey = document.getElementById("up").value;
-    let valid = checkKeyValidation(upkey, "up")
-    if (!valid) return false;
-    var downkey = document.getElementById("down").value;
-    valid = checkKeyValidation(downkey, "down")
-    if (!valid) return false;
-    var leftkey = document.getElementById("left").value;
-    valid = checkKeyValidation(leftkey, "left")
-    if (!valid) return false;
-    var rightkey = document.getElementById("right").value;
-    valid = checkKeyValidation(rightkey, "right")
-    if (!valid) return false;
+    // var upkey = 
+    let valid = checkKeyValidation(document.getElementById("up").value, "up")
+        // if (!valid) return false;
+        // var downkey = ;
+    valid = checkKeyValidation(document.getElementById("down").value, "down")
+        // if (!valid) return false;
+        // var leftkey = document.getElementById("left").value;
+    valid = checkKeyValidation(document.getElementById("left").value, "left")
+        // if (!valid) return false;
+        // var rightkey = document.getElementById("right").value;
+    valid = checkKeyValidation(document.getElementById("right").value, "right")
+        // if (!valid) return false;
     food_remain = document.getElementById("foodNum").value;
     if (food_remain.length == 0) {
         food_remain = Math.floor(Math.random() * (90 - 50 + 1)) + 50; //change in other functions 
         // alert("number of monsters chosen randomly")
     } else if (food_remain > 90 || food_remain < 50) {
         alert("food is between 50 to 90")
+        return false;
+    }
+    time_limit = document.getElementById("timeLeft").value;
+    if (time_limit < 60) {
+        alert("minimum time is 60 sec")
         return false;
     }
     monsters = document.getElementById("monstersNum").value;
@@ -360,11 +375,31 @@ function updateGridDetails() {
     return true;
 }
 
+function displayKeyCode(event, number) {
+    if (number == 1) {
+        id = "up";
+        upkey = event.keyCode;
+    } else if (number == 2) {
+        id = "down";
+        downkey = event.keyCode
+    } else if (number == 3) {
+        id = "left";
+        leftkey = event.keyCode;
+    } else if (number == 4) {
+        id = "right";
+        rightkey = event.keyCode;
+    }
+    document.getElementById(id).value = event.key;
+    // var char = event.which || event.keyCode;
+
+
+}
+
 function randomize() {
     upkey = 38;
     downkey = 40
     leftkey = 37;
-    rigthkey = 39;
+    rightkey = 39;
     food_remain = Math.floor(Math.random() * (90 - 50 + 1)) + 50; //change in other functions 
     monsters = Math.floor(Math.random * 4) + 1;
     color1 = getRandomColor();
@@ -388,18 +423,22 @@ function getRandomColor() {
 function checkKeyValidation(key, role) {
     if (key.length == 1) {
         // if((/[0-9a-zA-Z]+$/).test(key))
-        if (role == 'up') upkey = getKeyCode(key)
-        else if (role == 'down') downkey = getKeyCode(key)
-        else if (role == 'left') leftkey = getKeyCode(key)
-        else if (role == 'right') rightkey = getKeyCode(key)
-        return true;
+        // if (role == 'up') upkey = getKeyCode(key)
+        // else if (role == 'down') downkey = getKeyCode(key)
+        // else if (role == 'left') leftkey = getKeyCode(key)
+        // else if (role == 'right') rightkey = getKeyCode(key)
+        // if (role == 'up') upkey = String.fromCharCode(key)
+        // else if (role == 'down') downkey = String.fromCharCode(key)
+        // else if (role == 'left') leftkey = String.fromCharCode(key)
+        // else if (role == 'right') rightkey = String.fromCharCode(key)
+        // return true;
     } //check with non letters input
     else if (key.length == 0) {
         // alert("defult key chosen for " + role + " key");
         if (role == 'up') upkey = 38
         else if (role == 'down') downkey = 40
         else if (role == 'left') leftkey = 37
-        else if (role == 'right') rigthkey = 39
+        else if (role == 'right') rightkey = 39
         return true;
 
     } else {}
@@ -408,6 +447,7 @@ function checkKeyValidation(key, role) {
 }
 
 function getKeyCode(char) {
+
     var keyCode = char.charCodeAt(0);
     if (keyCode > 90) { // 90 is keyCode for 'z'
         return keyCode - 32;
@@ -415,36 +455,22 @@ function getKeyCode(char) {
     return keyCode;
 }
 
-const passwordValidation = new RegExp("(?=.[0-9])(?=.[a-zA-Z]).{6,}");
-const nameValidation = new RegExp("![^a-zA-Z]");
-const emailValidation = new RegExp("[S+@S+.S+]");
+// additional rules of form validation
 
-/* login */
+$.validator.addMethod("validPassword", function(value) {
+    return /^(?=.[A-Za-z])(?=.\d)[A-Za-z\d]{6,}$/.test(value);
+});
 
-function validateFormAndLogin() {
-    var validation = true;
-    validation &= validateUsernamePassword();
+$.validator.addMethod("validName", function(value) {
+    return /^[a-zA-Z]+$/.test(value);
+});
 
-    if (validation) {
-        switchDivs('settingsPage');
-        return true;
-    } else {
-        return false;
-    }
-}
+$.validator.addMethod("passwordMatch", function() {
+    let username = $('#uname').val();
+    let password = $('#pass').val();
 
-function validateUsernamePassword() {
-    var username = $('#uname').val();
-    var password = $('#pass').val();
-
-
-    if (username == "") {
-        alert("Login failed, Please enter your username");
-        return false;
-    }
-
-    var validUserName = "";
-    var validPassword = "";
+    let validUserName = "";
+    let validPassword = "";
     for (var i = 0; i < users.length; i++) {
         if (users[i][0] == username) {
             validUserName = users[i][0];
@@ -453,24 +479,113 @@ function validateUsernamePassword() {
                 validPassword = users[i][1];
                 break;
             }
-
         }
     }
     if (validUserName != "") {
         if (password == "") {
-            alert("Login failed, Please enter your password");
             return false;
 
         } else if (validPassword == "") {
-            alert("Login failed, Password is incorrect");
             return false;
 
         } else {
             return true;
         }
     } else {
-        alert("Login failed, Username Incorrect");
         return false;
     }
+});
+
+
+//forms validation 
+$(document).ready(function() {
+
+    //register
+    $("#registerForm").validate({
+        rules: {
+            username: {
+                required: true
+            },
+            password: {
+                required: true,
+                minlength: 6,
+                validPassword: true,
+            },
+            fullName: {
+                required: true,
+                validName: true,
+            },
+            email: {
+                required: true,
+                email: true,
+            }
+        },
+
+
+        messages: {
+            username: "Please enter username",
+            password: {
+                required: "Please enter a password",
+                minlength: "Password must consist at least 6 characters",
+                validPassword: "Please enter a valid password"
+            },
+            fullName: {
+                required: "Please enter your full name",
+                validName: "Name can only consist alphabetic chars"
+            },
+            email: {
+                required: "Please enter your Email",
+                email: "Please enter valid Email",
+            },
+        },
+
+        submitHandler: function() {
+            //add user to users array
+
+            let username = $('#username').val();
+            let password = $('#password').val();
+
+            users.push([username, password]);
+
+            switchDivs("loginPage");
+        }
+
+
+    });
+
+    //Login
+    $("#loginForm").validate({
+        rules: {
+            uname: {
+                required: true
+            },
+            pass: {
+                required: true,
+                passwordMatch: true,
+            },
+        },
+
+        messages: {
+            uname: "Please enter username",
+            pass: {
+                required: "Please enter a password",
+                passwordMatch: "Incorrect password"
+            },
+        },
+
+        submitHandler: function() {
+            switchDivs('settingsPage');
+        }
+    });
+});
+
+
+function displayKeyCode(event, number) {
+    if (number == 1) id = "up";
+    else if (number == 2) id = "down";
+    else if (number == 3) id = "left";
+    else if (number == 4) id = "right";
+    document.getElementById(id).value = event.key;
+    // var char = event.which || event.keyCode;
 
 }
