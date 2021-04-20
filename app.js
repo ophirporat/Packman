@@ -5,10 +5,11 @@ var score;
 var pac_color;
 var start_time;
 var time_elapsed;
-var interval;
+var pacman_interval;
+var monsters_interval;
 var currPage = 'welcomePage';
 var food_remain = 50;
-var monsters;
+var monstersAmount;
 var color1;
 var color2;
 var color3;
@@ -16,9 +17,10 @@ var upkey;
 var downkey;
 var rightkey;
 var leftkey;
+var userNameInGame;
 var randomBall = 0;
 var balls = [food_remain - (Math.floor(food_remain * 0.3) + Math.floor(food_remain * 0.1)), Math.floor(food_remain * 0.3), Math.floor(food_remain * 0.1)]
-    // var settings = {}
+    // var monsters =  
 var users = [
     ['k', 'k']
 ];
@@ -41,6 +43,7 @@ function StartGame() {
     var pacman_remain = 1;
     start_time = new Date();
     var obsticals = [Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9)]
+
 
 
     for (var i = 0; i < 10; i++) {
@@ -99,7 +102,8 @@ function StartGame() {
         },
         false
     );
-    interval = setInterval(UpdatePosition, 250);
+    pacman_interval = setInterval(UpdatePackmanPosition, 100);
+    monsters_interval = setInterval(UpdateMonstersPosition, 300);
 }
 
 function getNextBall() {
@@ -127,7 +131,7 @@ function findRandomEmptyCell(board) {
     return [i, j];
 }
 
-function GetKeyPressed() { // fix direction with letters!!!!
+function GetKeyPressed() {
     if (keysDown[upkey]) { //left
         return 1;
     }
@@ -168,15 +172,24 @@ function Draw() {
                 context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
                 context.fillStyle = color3; //color
                 context.fill();
-            } else if (board[i][j] == 4) {
+            } else if (board[i][j] == 4) { //wall
                 context.beginPath();
                 context.rect(center.x - 30, center.y - 30, 60, 60);
                 context.fillStyle = "grey"; //color
                 context.fill();
+            } else if (board[i][j] == 6) { //monster
+                draw_monster(x, y);
             }
+
+
         }
     }
+
+
+
+
 }
+
 
 function draw_pacman(direction, center) {
     context.beginPath();
@@ -216,7 +229,23 @@ function draw_pacman(direction, center) {
     context.fill();
 }
 
-function UpdatePosition() {
+function create_monsters(x, y) {
+    monsters = new Array(monstersAmount);
+
+    for (var i = 0; i < monstersAmount; i++) {
+        monsters[i] = new Object();
+        monsters[i].image = new Image();
+    }
+    monsters[0].image.src = "/images/monster_orange.jpg";
+    monsters[1].image.src = "/images/monster_red";
+    monsters[2].image.src = "/images/monster_pink.jpg";
+    monsters[3].image.src = "/images/monster_green.jpg";
+
+    //TODO: define location to monsters- edges of the board
+}
+
+
+function UpdatePackmanPosition() {
     board[shape.i][shape.j] = 0;
     x = GetKeyPressed();
     if (x == 1) {
@@ -260,13 +289,20 @@ function UpdatePosition() {
     }
     if (score >= 200 || time_elapsed >= time_limit) {
         Draw();
-        window.clearInterval(interval);
+        window.clearInterval(pacman_interval);
+        window.clearInterval(monsters_interval);
+
         window.alert("Game completed");
         return;
     } else {
         Draw();
     }
 }
+
+function UpdateMonstersPosition() {
+
+}
+
 
 function switchDivs(divId) {
     $('#' + currPage).hide();
@@ -396,11 +432,11 @@ function updateGridDetails() {
         // alert("minimum time is 60 sec")
         // return false;
     }
-    monsters = document.getElementById("monstersNum").value;
-    if (monsters.length == 0) {
-        monsters = Math.floor(Math.random * 4) + 1;
+    monstersAmount = document.getElementById("monstersNum").value;
+    if (monstersAmount.length == 0) {
+        monstersAmount = Math.floor(Math.random * 4) + 1;
         // alert("number of monsters chosen randomly")
-    } else if (monsters > 90 || monsters < 50) {
+    } else if (monstersAmount > 90 || monstersAmount < 50) {
         // alert("monsters is between 1 to 4")
         return false;
     }
@@ -438,7 +474,7 @@ function randomize() {
     leftkey = 37;
     rightkey = 39;
     food_remain = Math.floor(Math.random() * (90 - 50 + 1)) + 50; //change in other functions 
-    monsters = Math.floor(Math.random * 4) + 1;
+    monstersAmount = Math.floor(Math.random * 4) + 1;
     color1 = getRandomColor();
     color2 = getRandomColor();
     color3 = getRandomColor();
@@ -612,6 +648,7 @@ $(document).ready(function() {
         },
 
         submitHandler: function() {
+            userNameInGame = $('#username').val();
             switchDivs('settingsPage');
         }
     });

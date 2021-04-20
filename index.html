@@ -146,6 +146,8 @@
 
         <div style="display: none;" id="gamePage">
 
+            <audio id="gameMusic" src="sounds/Pac-Man-Theme-Song.mp3" type="audio/mpeg" preload="auto" loop></audio>
+
             <div id="score">
                 <label for="lblScore">SCORE:</label>
                 <input id="lblScore" type="text" readonly />
@@ -153,6 +155,9 @@
             <div id="time">
                 <label for="lblTime">TIME:</label>
                 <input id="lblTime" type="text" readonly />
+            </div>
+            <div id="newGame">
+                <button> New Game</button>
             </div>
             <div id="game">
                 <canvas id="canvas" height="600" width="600"></canvas>
