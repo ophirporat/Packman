@@ -1,6 +1,7 @@
 var context;
 var shape = new Object();
 var board;
+var monster_board;
 var score;
 var pac_color;
 var start_time;
@@ -29,7 +30,8 @@ var last_direction = 4;
 var time_limit;
 // var pacman_direction = 1;
 var x; //position
-
+var monsters;
+var monsters_positions;
 $(document).ready(function() {
     context = canvas.getContext("2d");
     Start();
@@ -37,23 +39,29 @@ $(document).ready(function() {
 
 function StartGame() {
     board = new Array();
+    monster_board = new Array();
     score = 0;
+    var monster_count = 0;
     pac_color = "yellow";
     var cnt = 100;
     var pacman_remain = 1;
     start_time = new Date();
     var obsticals = [Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9)]
-
-
+    create_monsters();
 
     for (var i = 0; i < 10; i++) {
         board[i] = new Array();
+        monster_board[i] = new Array();
         for (var j = 0; j < 10; j++) {
+            // if(((i == 0 && j == 0) || (i == board.length -1 && j== 0) || (i == board.length -1 && j==  board.length -1) ||  (i == 0 &&  j==  board.length -1))&& mo){
+
+            // }
             if (
                 (i == obsticals[0] && j == obsticals[1]) ||
                 (i == obsticals[2] && j == obsticals[3])
             ) {
                 board[i][j] = 4;
+                monster_board[i][j] = 4;
                 let randomDirection = Math.floor(Math.random() * 3) + 1
                 if (randomDirection == 1 && i > 0) { board[i - 1][j] = 4 } else if (randomDirection == 2 && j < 9) { board[i][j + 1] = 4 }
                 //  else if (randomDirection == 3 && i < 9) { board[i + 1][j] = 4 } 
@@ -61,6 +69,7 @@ function StartGame() {
                 continue;
             } else {
                 var randomNum = Math.random();
+                monster_board[i][j] = 0;
                 if (randomNum <= (1.0 * food_remain) / cnt) {
                     food_remain--;
                     randomBall = getNextBall();
@@ -86,6 +95,14 @@ function StartGame() {
         var emptyCell = findRandomEmptyCell(board);
         board[emptyCell[0]][emptyCell[1]] = 1;
         food_remain--;
+    }
+    count = 0
+    let positions = [(0, 0), (0, 9), (9, 9), (9, 0)];
+    while (count <= monstersAmount) {
+        cell = positions[count];
+        monster_board[cell[0]][cell[1]] = 6
+        monsters_positions[count] = cell;
+        count++;
     }
     keysDown = {};
     document.addEventListener(
@@ -120,6 +137,16 @@ function getNextBall() {
     }
 
 }
+
+// function findRandomCell(board) {
+//     var i = Math.floor(Math.random() * 9 + 1);
+//     var j = Math.floor(Math.random() * 9 + 1);
+//     while (board[i][j] == 2 || board[i][j] == 4) {
+//         i = Math.floor(Math.random() * 9 + 1);
+//         j = Math.floor(Math.random() * 9 + 1);
+//     }
+//     return [i, j];
+// }
 
 function findRandomEmptyCell(board) {
     var i = Math.floor(Math.random() * 9 + 1);
@@ -177,8 +204,10 @@ function Draw() {
                 context.rect(center.x - 30, center.y - 30, 60, 60);
                 context.fillStyle = "grey"; //color
                 context.fill();
-            } else if (board[i][j] == 6) { //monster
-                draw_monster(x, y);
+            }
+            if (moster_board[i][j] == 6) { //look at monster board
+                index = getMonsterIndex(i, j);
+                draw_monster(index);
             }
 
 
@@ -190,6 +219,15 @@ function Draw() {
 
 }
 
+function getMonsterIndex(i, j) {
+    for (var k = 0; k < monsters_positions.length; k++) {
+        if (monsters_positions[k][0] == i && monsters_positions[k][1] == j) return k;
+    }
+}
+
+function draw_monster(monster_index) {
+
+}
 
 function draw_pacman(direction, center) {
     context.beginPath();
@@ -229,17 +267,19 @@ function draw_pacman(direction, center) {
     context.fill();
 }
 
-function create_monsters(x, y) {
+function create_monsters() {
     monsters = new Array(monstersAmount);
 
     for (var i = 0; i < monstersAmount; i++) {
+        monsters.
         monsters[i] = new Object();
         monsters[i].image = new Image();
+        monsters[i].image.src = "/images/monster" + i + ".jpg";
     }
-    monsters[0].image.src = "/images/monster_orange.jpg";
-    monsters[1].image.src = "/images/monster_red";
-    monsters[2].image.src = "/images/monster_pink.jpg";
-    monsters[3].image.src = "/images/monster_green.jpg";
+    // monsters[0].image.src = "/images/monster_orange.jpg";
+    // monsters[1].image.src = "/images/monster_red";
+    // monsters[2].image.src = "/images/monster_pink.jpg";
+    // monsters[3].image.src = "/images/monster_green.jpg";
 
     //TODO: define location to monsters- edges of the board
 }
@@ -299,10 +339,49 @@ function UpdatePackmanPosition() {
     }
 }
 
+function getMonsterDirection(monsterIndex) {
+    //decide which direction to go according to pacman and update position in board
+}
+
 function UpdateMonstersPosition() {
+    for (var i = 0; i < monstersAmount; i++) {
+        let direction = getMonsterDirection(i);
+        let yPosition = monsters_positions[i][1];
+        let xPosition = monsters_positions[i][0];
+        if (direction == 1) { //up
+            monster_board[xPosition][yPosition - 1] = 6;
+            monster_board[xPosition][yPosition] = 0;
+            yPosition--;
+        }
+        if (direction == 2) { //down
+            monster_board[xPosition][yPosition + 1] = 6;
+            monster_board[xPosition][yPosition] = 0;
+            yPosition++;
+        }
+        if (direction == 3) { //left
+            monster_board[xPosition - 1][yPosition] = 6;
+            monster_board[xPosition][yPosition] = 0;
+            xPosition--;
+        }
+        if (direction == 4) { //right
+            monster_board[xPosition + 1][yPosition] = 6;
+            monster_board[xPosition][yPosition] = 0;
+            xPosition++;
+        }
+        monsters_positions[i] = (xPosition, yPosition);
+        if (xPosition == shape.x && yPosition == shape.y) {
+            killPacman()
+        }
+
+    }
+    draw();
+
 
 }
 
+function killPacman() {
+
+}
 
 function switchDivs(divId) {
     $('#' + currPage).hide();
