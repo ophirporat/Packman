@@ -26,7 +26,6 @@ var users = [
     ['k', 'k']
 ];
 var last_direction = 4;
-//heyyy
 var time_limit;
 // var pacman_direction = 1;
 var x; //position
@@ -34,6 +33,8 @@ var monsters;
 var monsters_positions;
 var food_settings;
 var center = new Object();
+var audio = new Audio('sounds/Pac-Man-Theme-Song.mp3');
+
 
 
 $(document).ready(function() {
@@ -42,6 +43,8 @@ $(document).ready(function() {
 });
 
 function StartGame() {
+
+    audio.play();
     board = new Array();
     monster_board = new Array();
     score = 0;
@@ -477,10 +480,12 @@ function UpdateMonstersPosition() {
 
 function killPacman() {
     alert("kill")
+    audio.pause();
 }
 
 function switchDivs(divId) {
     $('#' + currPage).hide();
+    // $('#' + currPage)[0].reset();
     currPage = divId
     $('#' + divId).show();
 }
@@ -714,7 +719,7 @@ $.validator.addMethod("validPassword", function(value) {
 });
 
 $.validator.addMethod("validName", function(value) {
-    return /^[a-zA-Z]+$/.test(value);
+    return /^[a-zA-Z ]+$/.test(value);
 });
 
 $.validator.addMethod("passwordMatch", function() {
