@@ -28,7 +28,8 @@
             <li onclick="switchDivs('welcomePage')">welcome</li>
             <li onclick="switchDivs('registerPage')">Register</li>
             <li onclick="switchDivs('loginPage')"> Login</li>
-            <li onclick="switchDivs('aboutPage')">About</li>
+            <li onclick="show('aboutPage')">About</li>
+
         </ul>
 
 
@@ -132,14 +133,37 @@
                 <br/>
                 <label for="ball2">ball3</label>
                 <input type="color" id="ball3" name="ball3" value="#8B008B"></p>
-            <label for="num of monsters">num of monsters:</label>
-            <input type="text" id="monstersNum" name="monstersNum"><br>
+            <label for="num of monsters">Choose number of monsters:</label>
+            <!-- <input type="text" id="monstersNum" name="monstersNum"><br> -->
+            <select name="monsters" id="monsters">
+                <option value="empty"></option>
+                <option value="1">1</option>
+                <option value="1">2</option>
+                <option value="1">3</option>
+                <option value="1">4</option>
+            </select>
+            <br/>
+
             <button onclick="updateGridDetails();"> submit</button>
             <button onclick="randomize()"> randomize</button>
 
         </div>
 
         <div style="display: none;" id="aboutPage">
+
+            <!-- Trigger/Open The Modal -->
+            <!-- <button id="myBtn">Open Modal</button> -->
+
+            <!-- The Modal -->
+            <div id="myModal" class="modal">
+
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p>Some text in the Modal..</p>
+                </div>
+
+            </div>
 
 
         </div>

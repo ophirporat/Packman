@@ -1,6 +1,7 @@
 var context;
 var shape = new Object();
 var board;
+// var board_size =
 var score;
 var pac_color;
 var start_time;
@@ -137,7 +138,7 @@ function StartGame() {
         false
     );
     pacman_interval = setInterval(UpdatePacmanPosition, 100);
-    monsters_interval = setInterval(UpdateMonstersPosition, 300);
+    monsters_interval = setInterval(UpdateMonstersPosition, 500);
 }
 
 function createWalls() {
@@ -481,7 +482,7 @@ function killPacman() {
 function switchDivs(divId) {
     $('#' + currPage).hide();
     currPage = divId
-    $('#' + divId).show()
+    $('#' + divId).show();
 }
 
 
@@ -799,6 +800,9 @@ $(document).ready(function() {
             users.push([username, password]);
 
             switchDivs("loginPage");
+            $('#registerForm')[0].reset();
+
+
         }
 
 
@@ -827,6 +831,8 @@ $(document).ready(function() {
         submitHandler: function() {
             userNameInGame = $('#username').val();
             switchDivs('settingsPage');
+            $('#loginForm')[0].reset();
+
         }
     });
 });
@@ -841,3 +847,35 @@ function displayKeyCode(event, number) {
     // var char = event.which || event.keyCode;
 
 }
+
+function show(div) {
+    $('#' + div).show();
+}
+
+//ABOUT
+// Get the modal
+$("#aboutPage").ready(function() {
+
+    var modal = document.getElementById("myModal");
+
+    // // Get the button that opens the modal
+    // var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on the button, open the modal
+    modal.style.display = "block";
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+});
