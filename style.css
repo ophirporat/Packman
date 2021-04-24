@@ -6,6 +6,9 @@ body {
     margin-right: 25%;
     text-align: center;
     font-family: 'Play', sans-serif;
+    background-image: url("images/pacman_background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 
@@ -20,17 +23,22 @@ body {
     margin-top: 80px;
     /* border-style: solid; */
     place-items: center stretch;
+    background-color: white;
+    border-radius: 15px;
+    /* max-height: 600px; */
 }
 
 button {
     cursor: pointer;
     align-self: center;
-    background-color: #fffc56;
-    color: black;
-    padding: 10px 20px;
+    background-color: black;
+    color: white;
+    padding: 18px 30px;
     margin: 8px 10px;
     border: none;
     opacity: 0.9;
+    font-size: large;
+    border-radius: 15px;
 }
 
 button:hover {
@@ -42,11 +50,15 @@ button:hover {
 
 ul {
     list-style-type: none;
+    height: 35px;
+    line-height: 35px;
     margin: 10px;
-    margin-top: 30px;
+    margin-top: 20px;
     padding: 0;
-    background-color: white;
+    background-color: black;
+    color: white;
     font-size: 20px;
+    border-radius: 15px;
 }
 
 li {
@@ -137,9 +149,14 @@ hr {
 
 /* Set a grey background color and center the text of the "sign in" section */
 
-.signin {
-    background-color: #f1f1f1;
-    text-align: center;
+#signin_from_register {
+    background-color: rgba(0, 0, 0, 0.0);
+    color: black;
+    font-weight: bold;
+    /* font-style: oblique; */
+    text-decoration: underline;
+    font-size: 22px;
+    padding: 5px 5px;
 }
 
 
@@ -216,4 +233,27 @@ hr {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+canvas {
+    height: 75%;
+    width: 75%;
+}
+
+.errors {
+    color: red;
+    font-weight: bolder;
+    min-height: 20px;
+    display: block;
+    font-size: small;
+}
+
+#lblScore,
+#lblTime {
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.0);
+}
+
+.inline {
+    display: inline-block;
 }

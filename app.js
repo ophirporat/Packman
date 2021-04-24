@@ -1,7 +1,7 @@
 var context;
 var shape = new Object();
 var board;
-// var board_size =
+var board_size = 20
 var score;
 var pac_color;
 var start_time;
@@ -10,7 +10,7 @@ var pacman_interval;
 var monsters_interval;
 var currPage = 'welcomePage';
 var food_remain = 50;
-var monstersAmount = 2;
+var monstersAmount;
 var color1;
 var color2;
 var color3;
@@ -34,7 +34,11 @@ var monsters_positions;
 var food_settings;
 var center = new Object();
 var audio = new Audio('sounds/Pac-Man-Theme-Song.mp3');
-
+var userNameInGame;
+var cell_height;
+var cell_width;
+var object_radius;
+var pacman_lives = 5;
 
 
 $(document).ready(function() {
@@ -42,65 +46,75 @@ $(document).ready(function() {
     // StartGame();
 });
 
-function StartGame() {
+function initialGamePage() {
+    document.getElementById('username_game').innerHTML = "Hello, " + userNameInGame;
+    document.getElementById('game_duration').innerHTML = "Game duration : " + time_limit;
+    document.getElementById('food_amount').innerHTML = "Food amount : " + food_remain;
+    document.getElementById('food_colors').innerHTML = "Food colors : ";
+    document.getElementById('monsters_amount').innerHTML = "Monsters amount : " + monstersAmount;
+    document.getElementById('lives').innerHTML = "Lives : " + pacman_lives;
 
-    audio.play();
+    audio.play(); //#TODO: make the music stop when div change
+
+}
+
+function initialGameBoard() {
     board = new Array();
     monster_board = new Array();
+
+    cell_height = canvas.height / board_size;
+    cell_width = canvas.width / board_size;
+
+    for (var i = 0; i < board_size; i++) {
+        board[i] = new Array();
+        monster_board[i] = new Array();
+        for (var j = 0; j < board_size; j++) {
+            board[i][j] = 0;
+            monster_board[i][j] = 0;
+        }
+    }
+}
+
+
+function StartGame() {
+
+    initialGameBoard();
     score = 0;
-    var monster_count = 0;
     pac_color = "yellow";
     var cnt = 100;
     var pacman_remain = 1;
     start_time = new Date();
     // var obsticals = [Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9)]
-    create_monsters();
-    for (var i = 0; i < 10; i++) {
-        board[i] = new Array();
-        monster_board[i] = new Array();
-        for (var j = 0; j < 10; j++) {
-
-            // if(((i == 0 && j == 0) || (i == board.length -1 && j== 0) || (i == board.length -1 && j==  board.length -1) ||  (i == 0 &&  j==  board.length -1))&& mo){
-            // }
-            // if (
-            //     (i == obsticals[0] && j == obsticals[1]) ||
-            //     (i == obsticals[2] && j == obsticals[3])
-            // ) {
-            //     board[i][j] = 4;
-            //     monster_board[i][j] = 4;
-            //     let randomDirection = Math.floor(Math.random() * 3) + 1
-            //     if (randomDirection == 1 && i > 0) {
-            //         board[i - 1][j] = 4
-            //     } else if (randomDirection == 2 && j < 9) { board[i][j + 1] = 4 }
-            //     //  else if (randomDirection == 3 && i < 9) { board[i + 1][j] = 4 } 
-            //     else if (randomDirection == 4 && j > 0) { board[i][j - 1] = 4 }
-            //     continue;
-            // } else {
+    create_monsters()
+    initialGamePage();
+    createWalls();
+    for (var i = 0; i < board_size; i++) {
+        for (var j = 0; j < board_size; j++) {
             var randomNum = Math.random();
-            // monster_board[i][j] = 0;
-            if (randomNum <= (1.0 * food_remain) / cnt) {
-                food_remain--;
-                randomBall = getNextBall();
-                if (randomBall == 0) board[i][j] = 1;
-                else if (randomBall == 1) board[i][j] = 3;
-                else if (randomBall == 2) board[i][j] = 5;
-                balls[randomBall]--;
+            if (board[i][j] != 4) {
+                if (randomNum <= (1.0 * food_remain) / cnt) {
+                    food_remain--;
+                    randomBall = getNextBall();
+                    if (randomBall == 0) board[i][j] = 1;
+                    else if (randomBall == 1) board[i][j] = 3;
+                    else if (randomBall == 2) board[i][j] = 5;
+                    balls[randomBall]--;
 
-                // board[i][j] = 1;
-            } else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) {
-                shape.i = i;
-                shape.j = j;
-                pacman_remain--;
-                board[i][j] = 2;
-            } else {
-                board[i][j] = 0;
+                    // board[i][j] = 1;
+                } else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) {
+                    shape.i = i;
+                    shape.j = j;
+                    pacman_remain--;
+                    board[i][j] = 2;
+                } else {
+                    board[i][j] = 0;
+                }
+                cnt--;
             }
-            cnt--;
-            // }
-        }
-    }
-    createWalls(); //TODO: this function must be before the for loop
 
+        }
+
+    }
     while (food_remain > 0) {
         var emptyCell = findRandomEmptyCell(board);
         board[emptyCell[0]][emptyCell[1]] = 1;
@@ -109,10 +123,10 @@ function StartGame() {
     food_remain = food_settings
     count = 0
     let positions = [
-        [0, 0],
-        [0, 9],
-        [9, 9],
-        [9, 0]
+        [1, 1],
+        [1, board_size - 2],
+        [board_size - 2, board_size - 2],
+        [board_size - 2, 1]
     ];
     while (count < monstersAmount) {
         cell = positions[count];
@@ -145,36 +159,84 @@ function StartGame() {
 }
 
 function createWalls() {
-    board[0][4] = 4;
-    board[1][1] = 4;
-    board[1][2] = 4;
-    board[1][4] = 4;
-    board[1][5] = 4;
-    board[1][7] = 4;
+
+    for (var i = 0; i < board_size; i++) {
+        for (var j = 0; j < board_size; j++) {
+            if (i == 0 || i == (board_size - 1) || j == 0 || j == (board_size - 1)) {
+                board[i][j] = 4
+            }
+        }
+    }
+
+    // board[1][5] = 4;
     board[1][8] = 4;
-    // board[1][9] = 4;
-    board[2][1] = 4;
-    board[3][1] = 4;
-    board[3][3] = 4;
-    board[3][4] = 4;
+    board[2][2] = 4;
+    board[2][3] = 4;
+    board[2][5] = 4;
+    // board[2][7] = 4;
+    // board[2][8] = 4;
+    // board[2][9] = 4;
+    board[3][2] = 4;
+    board[3][5] = 4;
     board[3][6] = 4;
     board[3][7] = 4;
-    board[4][7] = 4;
-    board[5][7] = 4;
-    board[6][1] = 4;
+    board[3][8] = 4;
+    // board[3][9] = 4;
+    board[4][5] = 4;
+    // board[4][6] = 4;
+    // board[4][8] = 4;
+    board[5][2] = 4;
+    board[5][3] = 4;
+    // board[5][5] = 4;
+    // board[5][6] = 4;
+    // board[5][7] = 4;
+    board[5][8] = 4;
+    board[5][9] = 4;
     board[6][3] = 4;
-    board[6][4] = 4;
-    board[6][6] = 4;
-    board[6][7] = 4;
-    // board[6][8] = 4;
-    board[7][1] = 4;
-    board[8][1] = 4;
-    board[8][2] = 4;
-    board[8][4] = 4;
-    board[8][6] = 4;
-    board[8][7] = 4;
-    board[8][9] = 4;
-    board[9][4] = 4;
+    board[6][5] = 4;
+    // board[6][7] = 4;
+    // board[7][2] = 4;
+    board[7][3] = 4;
+    // board[7][4] = 4;
+    // board[7][5] = 4;
+    // board[7][6] = 4;
+    board[7][7] = 4;
+    board[7][8] = 4;
+    // board[7][9] = 4;
+    board[8][3] = 4;
+    // board[8][4] = 4;
+    board[8][5] = 4;
+    // board[8][6] = 4;
+    // board[8][7] = 4;
+    board[8][8] = 4;
+    // board[8][9] = 4;
+    board[9][1] = 4;
+    // board[9][2] = 4;
+    board[9][3] = 4;
+    // board[9][5] = 4;
+    // board[9][6] = 4;
+    // board[9][7] = 4;
+    board[9][8] = 4;
+    // board[9][9] = 4;
+
+    // board[10][13] = 4;
+
+    for (var i = 1; i < 10; i++) {
+        let index = 1;
+        for (var j = 10; j < board_size - 1; j++) {
+            board[i][j] = board[i][j - index];
+            index += 2;
+        }
+    }
+
+    let index = 1;
+    for (var i = 10; i < board_size - 1; i++) {
+        for (var j = 0; j < board_size - 1; j++) {
+            board[i][j] = board[i - index][j];
+        }
+        index += 2;
+    }
+
 }
 
 function getNextBall() {
@@ -203,11 +265,11 @@ function getNextBall() {
 // }
 
 function findRandomEmptyCell(board) {
-    var i = Math.floor(Math.random() * 9 + 1);
-    var j = Math.floor(Math.random() * 9 + 1);
+    var i = Math.floor(Math.random() * (board_size - 1) + 1);
+    var j = Math.floor(Math.random() * (board_size - 1) + 1);
     while (board[i][j] != 0) {
-        i = Math.floor(Math.random() * 9 + 1);
-        j = Math.floor(Math.random() * 9 + 1);
+        i = Math.floor(Math.random() * (board_size) + 1);
+        j = Math.floor(Math.random() * (board_size) + 1);
     }
     return [i, j];
 }
@@ -231,31 +293,32 @@ function Draw() {
     canvas.width = canvas.width; //clean board
     lblScore.value = score;
     lblTime.value = time_elapsed;
-    for (var i = 0; i < 10; i++) {
-        for (var j = 0; j < 10; j++) {
+    object_radius = Math.min(cell_height, cell_width);
+    for (var i = 0; i < board_size; i++) {
+        for (var j = 0; j < board_size; j++) {
 
-            center.x = i * 60 + 30;
-            center.y = j * 60 + 30;
+            center.x = (i + 0.5) * cell_width;
+            center.y = (j + 0.5) * cell_height;
             if (board[i][j] == 2) { //pacman
                 draw_pacman(x, center);
             } else if (board[i][j] == 1) { //balls
                 context.beginPath();
-                context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
+                context.arc(center.x, center.y, object_radius / 6, 0, 2 * Math.PI); // circle
                 context.fillStyle = color1; //color
                 context.fill();
             } else if (board[i][j] == 3) { //balls
                 context.beginPath();
-                context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
+                context.arc(center.x, center.y, object_radius / 6, 0, 2 * Math.PI); // circle
                 context.fillStyle = color2; //color
                 context.fill();
             } else if (board[i][j] == 5) { //balls
                 context.beginPath();
-                context.arc(center.x, center.y, 15, 0, 2 * Math.PI); // circle
+                context.arc(center.x, center.y, object_radius / 6, 0, 2 * Math.PI); // circle
                 context.fillStyle = color3; //color
                 context.fill();
             } else if (board[i][j] == 4) { //wall
                 context.beginPath();
-                context.rect(center.x - 30, center.y - 30, 60, 60);
+                context.rect(center.x - cell_width / 2, center.y - cell_height / 2, object_radius, object_radius);
                 context.fillStyle = "grey"; //color
                 context.fill();
             }
@@ -287,12 +350,13 @@ function getMonsterIndex(i, j) {
 }
 
 function draw_monster(monster_index) { //put a picture
-    context.drawImage(monsters[monster_index].image, 60 * monsters[monster_index].x, 60 * monsters[monster_index].y, 60, 60)
-        // context.beginPath();
-        // context.arc(60 * monsters[monster_index].x + 30, 60 * monsters[monster_index].y + 30, 30, 0.65 * Math.PI, -1.65 * Math.PI)
-        //     // context.lineTo(monsters[monster_index].x, monsters[monster_index].y)
-        // context.fillStyle = "green"
-        // context.fill()
+    let monster = monsters[monster_index];
+    context.drawImage(monster.image, center.x - cell_width / 2, center.y - cell_height / 2, cell_width / 1.2, cell_height / 1.2);
+    // context.beginPath();
+    // context.arc(60 * monsters[monster_index].x + 30, 60 * monsters[monster_index].y + 30, 30, 0.65 * Math.PI, -1.65 * Math.PI)
+    //     // context.lineTo(monsters[monster_index].x, monsters[monster_index].y)
+    // context.fillStyle = "green"
+    // context.fill()
 }
 
 function draw_pacman(direction, center) {
@@ -301,16 +365,16 @@ function draw_pacman(direction, center) {
         direction = last_direction;
     }
     if (direction == 2) { //down
-        context.arc(center.x, center.y, 30, 0.65 * Math.PI, -1.65 * Math.PI);
+        context.arc(center.x, center.y, object_radius / 2, 0.65 * Math.PI, -1.65 * Math.PI);
         last_direction = 2;
     } else if (direction == 3) { //left
-        context.arc(center.x, center.y, 30, 1.15 * Math.PI, -1.15 * Math.PI); ///
+        context.arc(center.x, center.y, object_radius / 2, 1.15 * Math.PI, -1.15 * Math.PI); ///
         last_direction = 3;
     } else if (direction == 4) { //right
-        context.arc(center.x, center.y, 30, 0.15 * Math.PI, 1.85 * Math.PI); ///
+        context.arc(center.x, center.y, object_radius / 2, 0.15 * Math.PI, 1.85 * Math.PI); ///
         last_direction = 4;
     } else if (direction == 1) { //up
-        context.arc(center.x, center.y, 30, 1.65 * Math.PI, 1.35 * Math.PI);
+        context.arc(center.x, center.y, object_radius / 2, 1.65 * Math.PI, 1.35 * Math.PI);
         last_direction = 1;
     }
 
@@ -320,13 +384,13 @@ function draw_pacman(direction, center) {
     // eye  
     context.beginPath();
     if (direction == 2) {
-        context.arc(center.x + 15, center.y + 5, 5, 0, 2 * Math.PI);
+        context.arc(center.x + 10, center.y + 5, object_radius / 20, 0, 2 * Math.PI);
     } else if (direction == 3) {
-        context.arc(center.x - 5, center.y - 15, 5, 0, 2 * Math.PI);
+        context.arc(center.x - 5, center.y - 10, object_radius / 20, 0, 2 * Math.PI);
     } else if (direction == 4) {
-        context.arc(center.x + 5, center.y - 15, 5, 0, 2 * Math.PI);
+        context.arc(center.x + 5, center.y - 10, object_radius / 20, 0, 2 * Math.PI);
     } else if (direction == 1) {
-        context.arc(center.x + 15, center.y - 5, 5, 0, 2 * Math.PI);
+        context.arc(center.x + 10, center.y - 5, object_radius / 20, 0, 2 * Math.PI);
         // circle
     }
     context.fillStyle = "black"; //color
@@ -362,7 +426,7 @@ function UpdatePacmanPosition() {
         }
     }
     if (x == 2) {
-        if (shape.j < 9 && board[shape.i][shape.j + 1] != 4) { //down
+        if (shape.j < (board_size - 1) && board[shape.i][shape.j + 1] != 4) { //down
             shape.j++;
             console.log("direction 2")
         }
@@ -374,7 +438,7 @@ function UpdatePacmanPosition() {
         }
     }
     if (x == 4) {
-        if (shape.i < 9 && board[shape.i + 1][shape.j] != 4) { //right
+        if (shape.i < (board_size - 1) && board[shape.i + 1][shape.j] != 4) { //right
             shape.i++;
             console.log("direction 4")
         }
@@ -391,15 +455,17 @@ function UpdatePacmanPosition() {
     document.getElementById("lblScore").value = score;
     var currentTime = new Date();
     time_elapsed = (currentTime - start_time) / 1000;
-    // if (score >= 20 && time_elapsed <= 10) {
-    //     // pac_color = "green";
-    // }
-    if (score >= 200 || time_elapsed >= time_limit) {
+
+    //game over- time is up
+    if (time_elapsed >= time_limit) {
         Draw();
         window.clearInterval(pacman_interval);
         window.clearInterval(monsters_interval);
-        window.alert("Game completed");
-        // return;
+        if (score < 100) {
+            window.alert("You are better than " + score + " points!");
+        } else {
+            window.alert("Winner!!!")
+        }
     } else {
         Draw();
     }
@@ -441,8 +507,6 @@ function UpdateMonstersPosition() {
         // let xPosition = monsters_positions[i][0];
         let monster = monsters[i];
         if (monster.x == shape.i && monster.y == shape.j) {
-            window.clearInterval(pacman_interval);
-            window.clearInterval(monsters_interval);
             killPacman()
             Draw();
 
@@ -479,7 +543,18 @@ function UpdateMonstersPosition() {
 }
 
 function killPacman() {
-    alert("kill")
+    score -= 10;
+    if (pacman_lives > 0) {
+        pacman_lives--;
+        alert("Got you!! You have " + pacman_lives + " more lives")
+            //TODO: place pacman and monsters
+
+    } else {
+        window.clearInterval(pacman_interval);
+        window.clearInterval(monsters_interval);
+        alert("Loser!")
+
+    }
     audio.pause();
 }
 
@@ -497,93 +572,93 @@ function hide(divId) {
 
 /* birthDay form */
 
-var Days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // index => month [0-11]
-$(document).ready(function() {
-    var option = '<option value="day">day</option>';
-    var selectedDay = "day";
-    for (var i = 1; i <= Days[0]; i++) { //add option days
-        option += '<option value="' + i + '">' + i + '</option>';
-    }
-    $('#day').append(option);
-    $('#day').val(selectedDay);
+// var Days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // index => month [0-11]
+// $(document).ready(function() {
+//     var option = '<option value="day">day</option>';
+//     var selectedDay = "day";
+//     for (var i = 1; i <= Days[0]; i++) { //add option days
+//         option += '<option value="' + i + '">' + i + '</option>';
+//     }
+//     $('#day').append(option);
+//     $('#day').val(selectedDay);
 
-    var option = '<option value="month">month</option>';
-    var selectedMon = "month";
-    for (var i = 1; i <= 12; i++) {
-        option += '<option value="' + i + '">' + i + '</option>';
-    }
-    $('#month').append(option);
-    $('#month').val(selectedMon);
+//     var option = '<option value="month">month</option>';
+//     var selectedMon = "month";
+//     for (var i = 1; i <= 12; i++) {
+//         option += '<option value="' + i + '">' + i + '</option>';
+//     }
+//     $('#month').append(option);
+//     $('#month').val(selectedMon);
 
-    var option = '<option value="month">month</option>';
-    var selectedMon = "month";
-    for (var i = 1; i <= 12; i++) {
-        option += '<option value="' + i + '">' + i + '</option>';
-    }
-    $('#month2').append(option);
-    $('#month2').val(selectedMon);
+//     var option = '<option value="month">month</option>';
+//     var selectedMon = "month";
+//     for (var i = 1; i <= 12; i++) {
+//         option += '<option value="' + i + '">' + i + '</option>';
+//     }
+//     $('#month2').append(option);
+//     $('#month2').val(selectedMon);
 
-    var d = new Date();
-    var option = '<option value="year">year</option>';
-    selectedYear = "year";
-    for (var i = 1930; i <= d.getFullYear(); i++) { // years start i
-        option += '<option value="' + i + '">' + i + '</option>';
-    }
-    $('#year').append(option);
-    $('#year').val(selectedYear);
-});
+//     var d = new Date();
+//     var option = '<option value="year">year</option>';
+//     selectedYear = "year";
+//     for (var i = 1930; i <= d.getFullYear(); i++) { // years start i
+//         option += '<option value="' + i + '">' + i + '</option>';
+//     }
+//     $('#year').append(option);
+//     $('#year').val(selectedYear);
+// });
 
-function isLeapYear(year) {
-    year = parseInt(year);
-    if (year % 4 != 0) {
-        return false;
-    } else if (year % 400 == 0) {
-        return true;
-    } else if (year % 100 == 0) {
-        return false;
-    } else {
-        return true;
-    }
-}
+// function isLeapYear(year) {
+//     year = parseInt(year);
+//     if (year % 4 != 0) {
+//         return false;
+//     } else if (year % 400 == 0) {
+//         return true;
+//     } else if (year % 100 == 0) {
+//         return false;
+//     } else {
+//         return true;
+//     }
+// }
 
-function change_year(select) {
-    if (isLeapYear($(select).val())) {
-        Days[1] = 29;
+// function change_year(select) {
+//     if (isLeapYear($(select).val())) {
+//         Days[1] = 29;
 
-    } else {
-        Days[1] = 28;
-    }
-    if ($("#month").val() == 2) {
-        var day = $('#day');
-        var val = $(day).val();
-        $(day).empty();
-        var option = '<option value="day">day</option>';
-        for (var i = 1; i <= Days[1]; i++) { //add option days
-            option += '<option value="' + i + '">' + i + '</option>';
-        }
-        $(day).append(option);
-        if (val > Days[month]) {
-            val = 1;
-        }
-        $(day).val(val);
-    }
-}
+//     } else {
+//         Days[1] = 28;
+//     }
+//     if ($("#month").val() == 2) {
+//         var day = $('#day');
+//         var val = $(day).val();
+//         $(day).empty();
+//         var option = '<option value="day">day</option>';
+//         for (var i = 1; i <= Days[1]; i++) { //add option days
+//             option += '<option value="' + i + '">' + i + '</option>';
+//         }
+//         $(day).append(option);
+//         if (val > Days[month]) {
+//             val = 1;
+//         }
+//         $(day).val(val);
+//     }
+// }
 
-function change_month(select) {
-    var day = $('#day');
-    var val = $(day).val();
-    $(day).empty();
-    var option = '<option value="day">day</option>';
-    var month = parseInt($(select).val()) - 1;
-    for (var i = 1; i <= Days[month]; i++) { //add option days
-        option += '<option value="' + i + '">' + i + '</option>';
-    }
-    $(day).append(option);
-    if (val > Days[month]) {
-        val = 1;
-    }
-    $(day).val(val);
-}
+// function change_month(select) {
+//     var day = $('#day');
+//     var val = $(day).val();
+//     $(day).empty();
+//     var option = '<option value="day">day</option>';
+//     var month = parseInt($(select).val()) - 1;
+//     for (var i = 1; i <= Days[month]; i++) { //add option days
+//         option += '<option value="' + i + '">' + i + '</option>';
+//     }
+//     $(day).append(option);
+//     if (val > Days[month]) {
+//         val = 1;
+//     }
+//     $(day).val(val);
+// }
 
 function updateGridDetails() {
     // var upkey = 
@@ -759,6 +834,7 @@ $(document).ready(function() {
 
     //register
     $("#registerForm").validate({
+        errorClass: 'errors',
         rules: {
             username: {
                 required: true
@@ -775,7 +851,11 @@ $(document).ready(function() {
             email: {
                 required: true,
                 email: true,
-            }
+            },
+            birthday: {
+                required: true,
+            },
+
         },
 
 
@@ -793,6 +873,9 @@ $(document).ready(function() {
             email: {
                 required: "Please enter your Email",
                 email: "Please enter valid Email",
+            },
+            birthday: {
+                required: "Please enter your birth date",
             },
         },
 
@@ -815,6 +898,7 @@ $(document).ready(function() {
 
     //Login
     $("#loginForm").validate({
+        errorClass: 'errors',
         rules: {
             uname: {
                 required: true
@@ -834,7 +918,7 @@ $(document).ready(function() {
         },
 
         submitHandler: function() {
-            userNameInGame = $('#username').val();
+            userNameInGame = $('#uname').val();
             switchDivs('settingsPage');
             $('#loginForm')[0].reset();
 
