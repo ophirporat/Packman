@@ -39,6 +39,12 @@ var cell_height;
 var cell_width;
 var object_radius;
 var pacman_lives = 5;
+var positions = [
+    [1, 1],
+    [1, board_size - 2],
+    [board_size - 2, board_size - 2],
+    [board_size - 2, 1]
+];
 
 
 $(document).ready(function() {
@@ -60,17 +66,13 @@ function initialGamePage() {
 
 function initialGameBoard() {
     board = new Array();
-    monster_board = new Array();
-
     cell_height = canvas.height / board_size;
     cell_width = canvas.width / board_size;
 
     for (var i = 0; i < board_size; i++) {
         board[i] = new Array();
-        monster_board[i] = new Array();
         for (var j = 0; j < board_size; j++) {
             board[i][j] = 0;
-            monster_board[i][j] = 0;
         }
     }
 }
@@ -88,8 +90,8 @@ function StartGame() {
     create_monsters()
     initialGamePage();
     createWalls();
-    for (var i = 0; i < board_size; i++) {
-        for (var j = 0; j < board_size; j++) {
+    for (var i = 0; i < board_size - 1; i++) {
+        for (var j = 0; j < board_size - 1; j++) {
             var randomNum = Math.random();
             if (board[i][j] != 4) {
                 if (randomNum <= (1.0 * food_remain) / cnt) {
@@ -99,7 +101,6 @@ function StartGame() {
                     else if (randomBall == 1) board[i][j] = 3;
                     else if (randomBall == 2) board[i][j] = 5;
                     balls[randomBall]--;
-
                     // board[i][j] = 1;
                 } else if (randomNum < (1.0 * (pacman_remain + food_remain)) / cnt) {
                     shape.i = i;
@@ -121,24 +122,7 @@ function StartGame() {
         food_remain--;
     }
     food_remain = food_settings
-    count = 0
-    let positions = [
-        [1, 1],
-        [1, board_size - 2],
-        [board_size - 2, board_size - 2],
-        [board_size - 2, 1]
-    ];
-    while (count < monstersAmount) {
-        cell = positions[count];
-        cell1 = cell[0];
-        cell2 = cell[1];
-
-        monster_board[cell[0]][cell[1]] = 6
-        monsters[count].x = cell[0];
-        monsters[count].y = cell[1];
-        // monsters_positions[count] = cell;
-        count++;
-    }
+        // was monsters positions
     keysDown = {};
     document.addEventListener(
         "keydown",
@@ -221,7 +205,7 @@ function createWalls() {
 
     // board[10][13] = 4;
 
-    for (var i = 1; i < 10; i++) {
+    for (var i = 1; i < board_size / 2; i++) {
         let index = 1;
         for (var j = 10; j < board_size - 1; j++) {
             board[i][j] = board[i][j - index];
@@ -230,7 +214,7 @@ function createWalls() {
     }
 
     let index = 1;
-    for (var i = 10; i < board_size - 1; i++) {
+    for (var i = board_size / 2; i < board_size - 1; i++) {
         for (var j = 0; j < board_size - 1; j++) {
             board[i][j] = board[i - index][j];
         }
@@ -323,17 +307,11 @@ function Draw() {
                 context.fill();
             }
 
-
-
-
         }
     }
     for (u = 0; u < monstersAmount; u++) {
         draw_monster(u)
     }
-
-
-
 
 }
 
@@ -351,12 +329,8 @@ function getMonsterIndex(i, j) {
 
 function draw_monster(monster_index) { //put a picture
     let monster = monsters[monster_index];
-    context.drawImage(monster.image, center.x - cell_width / 2, center.y - cell_height / 2, cell_width / 1.2, cell_height / 1.2);
-    // context.beginPath();
-    // context.arc(60 * monsters[monster_index].x + 30, 60 * monsters[monster_index].y + 30, 30, 0.65 * Math.PI, -1.65 * Math.PI)
-    //     // context.lineTo(monsters[monster_index].x, monsters[monster_index].y)
-    // context.fillStyle = "green"
-    // context.fill()
+    // context.drawImage(monster.image, monster.x - cell_width / 2, monster.y - cell_height / 2, cell_width / 1.2, cell_height / 1.2);
+    context.drawImage(monsters[monster_index].image, cell_height * monsters[monster_index].x, cell_width * monsters[monster_index].y, cell_height, cell_width)
 }
 
 function draw_pacman(direction, center) {
@@ -402,17 +376,14 @@ function create_monsters() {
 
     for (var i = 0; i < monstersAmount; i++) {
         monsters[i] = new Object();
-        monsters[i].x = null;
-        monsters[i].y = null;
+        cell = positions[i];
+        monsters[i].x = cell[0];
+        monsters[i].y = cell[1];
         monsters[i].image = new Image();
         monsters[i].image.src = "images/monster" + (i + 1) + ".jpg";
     }
-    // monsters[0].image.src = "/images/monster_orange.jpg";
-    // monsters[1].image.src = "/images/monster_red";
-    // monsters[2].image.src = "/images/monster_pink.jpg";
-    // monsters[3].image.src = "/images/monster_green.jpg";
 
-    //TODO: define location to monsters- edges of the board
+
 }
 
 
@@ -496,8 +467,6 @@ function getMonsterDirection(monsterIndex) { //decide which direction to go acco
     return direction[randomNum];
 
 
-
-
 }
 
 function UpdateMonstersPosition() {
@@ -543,19 +512,46 @@ function UpdateMonstersPosition() {
 }
 
 function killPacman() {
-    score -= 10;
+    window.clearInterval(pacman_interval);
+    window.clearInterval(monsters_interval);
+    if (score > 9) score -= 10;
     if (pacman_lives > 0) {
         pacman_lives--;
         alert("Got you!! You have " + pacman_lives + " more lives")
+        continueGame()
             //TODO: place pacman and monsters
 
     } else {
-        window.clearInterval(pacman_interval);
-        window.clearInterval(monsters_interval);
         alert("Loser!")
 
     }
     audio.pause();
+}
+
+function continueGame() {
+    for (var i = 0; i < monstersAmount; i++) {
+        cell = positions[i];
+        monsters[i].x = cell[0];
+        monsters[i].y = cell[1];
+    }
+    board[shape.i][shape.j] = 0;
+    new_position = findRandomEmptyCellForPacman(board)
+    shape.i = new_position[0]
+    shape.j = new_position[1]
+    board[shape.i][shape.j] = 2
+    pacman_interval = setInterval(UpdatePacmanPosition, 100);
+    monsters_interval = setInterval(UpdateMonstersPosition, 500);
+    Draw()
+}
+
+function findRandomEmptyCellForPacman(board) {
+    var i = Math.floor(Math.random() * (board_size - 2) + 1);
+    var j = Math.floor(Math.random() * (board_size - 2) + 1);
+    while (board[i][j] == 4) {
+        i = Math.floor(Math.random() * (board_size - 2) + 1);
+        j = Math.floor(Math.random() * (board_size - 2) + 1);
+    }
+    return [i, j];
 }
 
 function switchDivs(divId) {
@@ -689,14 +685,15 @@ function updateGridDetails() {
         // alert("minimum time is 60 sec")
         // return false;
     }
-    monstersAmount = document.getElementById("monstersNum").value;
+    monstersAmount = document.getElementById("monsters").value;
     if (monstersAmount.length == 0) {
         monstersAmount = Math.floor(Math.random * 4) + 1;
         // alert("number of monsters chosen randomly")
-    } else if (monstersAmount > 90 || monstersAmount < 50) {
-        // alert("monsters is between 1 to 4")
-        return false;
     }
+    // } else if (monstersAmount > 90 || monstersAmount < 50) {
+    //     // alert("monsters is between 1 to 4")
+    //     return false;
+    // }
     color1 = document.getElementById("ball1").value;
     color2 = document.getElementById("ball2").value;
     color3 = document.getElementById("ball3").value;
@@ -948,15 +945,17 @@ $("#aboutPage").ready(function() {
     var modal = document.getElementById("myModal");
 
     // // Get the button that opens the modal
-    // var btn = document.getElementById("myBtn");
+    var btn = document.getElementById("myBtn");
 
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
 
     // When the user clicks on the button, open the modal
-    modal.style.display = "block";
 
-    // When the user clicks on <span> (x), close the modal
+    btn.onclick = function() {
+            modal.style.display = "block";
+        }
+        // When the user clicks on <span> (x), close the modal
     span.onclick = function() {
         modal.style.display = "none";
     }
@@ -967,4 +966,10 @@ $("#aboutPage").ready(function() {
             modal.style.display = "none";
         }
     }
+
+    $(window).keydown(function(event) {
+        if (event.keyCode == 27) {
+            modal.style.display = "none";
+        }
+    });
 });
