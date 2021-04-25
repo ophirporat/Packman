@@ -174,30 +174,40 @@
         <div style="display: none;" id="gamePage">
 
             <!-- <audio id="gameMusic" src="sounds/Pac-Man-Theme-Song.mp3" type="audio/mpeg" preload="auto" loop></audio> -->
-            <div id="game">
+            <div class="inline" id="game">
 
                 <p id="username_game"></p>
 
-                <p>Selected keys: UP: DOWN: LEFT: RIGHT:</p>
+                <!-- <p>Selected keys: UP: DOWN: LEFT: RIGHT:</p> -->
+                <p>Selected keys:
+                    <label id="uplbl">UP:</label>
+                    <label id="downlbl">DOWN:</label><br>
+                    <label id="leftlbl">LEFT:</label>
+                    <label id="rightlbl">RIGHT:</label>
+                </p>
+                <p>
+                    <canvas id="scoreCanvas" height="60" width="600"></canvas>
+                </p>
                 <p id="game_duration"></p>
                 <p id="food_amount"></p>
                 <p id="food_colors"></p>
                 <p id="monsters_amount"></p>
                 <p id="lives"></p>
 
+
+                <div class="inline" id="score">
+                    <label for="lblScore">SCORE:</label>
+                    <input id="lblScore" type="text" readonly />
+                </div>
+                <div class="inline" id="time">
+                    <label for="lblTime">TIME:</label>
+                    <input id="lblTime" type="text" readonly />
+                </div>
+                <div id="newGame">
+                    <button onclick="StartGame();"> New Game</button>
+                </div>
             </div>
-            <div class="inline" id="score">
-                <label for="lblScore">SCORE:</label>
-                <input id="lblScore" type="text" readonly />
-            </div>
-            <div class="inline" id="time">
-                <label for="lblTime">TIME:</label>
-                <input id="lblTime" type="text" readonly />
-            </div>
-            <div id="newGame">
-                <button onclick="StartGame()"> New Game</button>
-            </div>
-            <div id="game">
+            <div class="inline" id="game">
                 <canvas id="canvas" height="600" width="600"></canvas>
             </div>
 
