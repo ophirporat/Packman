@@ -187,7 +187,7 @@ function createWalls() {
     // board[4][8] = 4;
     board[5][2] = 4;
     board[5][3] = 4;
-    // board[5][5] = 4;
+    board[5][5] = 4;
     // board[5][6] = 4;
     // board[5][7] = 4;
     board[5][8] = 4;
