@@ -872,244 +872,244 @@ function checkKeyValidation(key, role) {
         else if (role == 'right') rightkey = key
     }
     return true;
+}
+// function getKeyCode(char) {
 
-    // function getKeyCode(char) {
+//     var keyCode = char.charCodeAt(0);
+//     if (keyCode > 90) { // 90 is keyCode for 'z'
+//         return keyCode - 32;
+//     }
+//     return keyCode;
+// }
 
-    //     var keyCode = char.charCodeAt(0);
-    //     if (keyCode > 90) { // 90 is keyCode for 'z'
-    //         return keyCode - 32;
-    //     }
-    //     return keyCode;
-    // }
+// additional rules of form validation
 
-    // additional rules of form validation
+$.validator.addMethod("validPassword", function(value) {
+    return /^(?=.*[A-Za-z])(?=.*\d)[0-9a-zA-Z]{6,}$/.test(value);
+});
 
-    $.validator.addMethod("validPassword", function(value) {
-        return /^(?=.*[A-Za-z])(?=.*\d)[0-9a-zA-Z]{6,}$/.test(value);
-    });
+$.validator.addMethod("validName", function(value) {
+    return /^[a-zA-Z ]+$/.test(value);
+});
 
-    $.validator.addMethod("validName", function(value) {
-        return /^[a-zA-Z ]+$/.test(value);
-    });
+$.validator.addMethod("passwordMatch", function() {
+    let username = $('#uname').val();
+    let password = $('#pass').val();
 
-    $.validator.addMethod("passwordMatch", function() {
-        let username = $('#uname').val();
-        let password = $('#pass').val();
+    let validUserName = "";
+    let validPassword = "";
+    for (var i = 0; i < users.length; i++) {
+        if (users[i][0] == username) {
+            validUserName = users[i][0];
 
-        let validUserName = "";
-        let validPassword = "";
-        for (var i = 0; i < users.length; i++) {
-            if (users[i][0] == username) {
-                validUserName = users[i][0];
-
-                if (users[i][1] == password) {
-                    validPassword = users[i][1];
-                    break;
-                }
+            if (users[i][1] == password) {
+                validPassword = users[i][1];
+                break;
             }
         }
-        if (validUserName != "") {
-            if (password == "") {
-                return false;
-
-            } else if (validPassword == "") {
-                return false;
-
-            } else {
-                return true;
-            }
-        } else {
+    }
+    if (validUserName != "") {
+        if (password == "") {
             return false;
+
+        } else if (validPassword == "") {
+            return false;
+
+        } else {
+            return true;
         }
-    });
+    } else {
+        return false;
+    }
+});
 
 
-    //forms validation 
-    $(document).ready(function() {
+//forms validation 
+$(document).ready(function() {
 
-        //register
-        $("#registerForm").validate({
-            errorClass: 'errors',
-            rules: {
-                username: {
-                    required: true
-                },
-                password: {
-                    required: true,
-                    minlength: 6,
-                    validPassword: true,
-                },
-                fullName: {
-                    required: true,
-                    validName: true,
-                },
-                email: {
-                    required: true,
-                    email: true,
-                },
-                birthday: {
-                    required: true,
-                },
-
+    //register
+    $("#registerForm").validate({
+        errorClass: 'errors',
+        rules: {
+            username: {
+                required: true
+            },
+            password: {
+                required: true,
+                minlength: 6,
+                validPassword: true,
+            },
+            fullName: {
+                required: true,
+                validName: true,
+            },
+            email: {
+                required: true,
+                email: true,
+            },
+            birthday: {
+                required: true,
             },
 
+        },
 
-            messages: {
-                username: "Please enter username",
-                password: {
-                    required: "Please enter a password",
-                    minlength: "Password must consist at least 6 characters",
-                    validPassword: "Please enter a valid password"
-                },
-                fullName: {
-                    required: "Please enter your full name",
-                    validName: "Name can only consist alphabetic chars"
-                },
-                email: {
-                    required: "Please enter your Email",
-                    email: "Please enter valid Email",
-                },
-                birthday: {
-                    required: "Please enter your birth date",
-                },
+
+        messages: {
+            username: "Please enter username",
+            password: {
+                required: "Please enter a password",
+                minlength: "Password must consist at least 6 characters",
+                validPassword: "Please enter a valid password"
             },
-
-            submitHandler: function() {
-                //add user to users array
-
-                let username = $('#username').val();
-                let password = $('#password').val();
-
-                users.push([username, password]);
-
-                switchDivs("loginPage");
-                $('#registerForm')[0].reset();
-
-
-            }
-
-
-        });
-
-        //Login
-        $("#loginForm").validate({
-            errorClass: 'errors',
-            rules: {
-                uname: {
-                    required: true
-                },
-                pass: {
-                    required: true,
-                    passwordMatch: true,
-                },
+            fullName: {
+                required: "Please enter your full name",
+                validName: "Name can only consist alphabetic chars"
             },
-
-            messages: {
-                uname: "Please enter username",
-                pass: {
-                    required: "Please enter a password",
-                    passwordMatch: "Incorrect password"
-                },
+            email: {
+                required: "Please enter your Email",
+                email: "Please enter valid Email",
             },
+            birthday: {
+                required: "Please enter your birth date",
+            },
+        },
 
-            submitHandler: function() {
-                userNameInGame = $('#uname').val();
-                switchDivs('settingsPage');
-                $('#loginForm')[0].reset();
+        submitHandler: function() {
+            //add user to users array
 
-            }
-        });
-    });
+            let username = $('#username').val();
+            let password = $('#password').val();
 
+            users.push([username, password]);
 
-    function displayKeyCode(event, number) {
-        if (number == 1) {
-            id = "up";
-            upkey = event.key
-        } else if (number == 2) {
-            id = "down";
-            downkey = event.key
+            switchDivs("loginPage");
+            $('#registerForm')[0].reset();
 
-        } else if (number == 3) {
-            id = "left";
-            leftkey = event.key
-        } else if (number == 4) {
-            id = "right";
-            rightkey = event.key
 
         }
-        document.getElementById(id).value = event.key;
+
+
+    });
+
+    //Login
+    $("#loginForm").validate({
+        errorClass: 'errors',
+        rules: {
+            uname: {
+                required: true
+            },
+            pass: {
+                required: true,
+                passwordMatch: true,
+            },
+        },
+
+        messages: {
+            uname: "Please enter username",
+            pass: {
+                required: "Please enter a password",
+                passwordMatch: "Incorrect password"
+            },
+        },
+
+        submitHandler: function() {
+            userNameInGame = $('#uname').val();
+            switchDivs('settingsPage');
+            $('#loginForm')[0].reset();
+
+        }
+    });
+});
+
+
+function displayKeyCode(event, number) {
+    if (number == 1) {
+        id = "up";
+        upkey = event.key
+    } else if (number == 2) {
+        id = "down";
+        downkey = event.key
+
+    } else if (number == 3) {
+        id = "left";
+        leftkey = event.key
+    } else if (number == 4) {
+        id = "right";
+        rightkey = event.key
+
+    }
+    document.getElementById(id).value = event.key;
+}
+
+function show(div) {
+    $('#' + div).show();
+}
+
+//ABOUT
+// Get the modal
+$("#aboutPage").ready(function() {
+
+    var modal = document.getElementById("myModal");
+
+    // // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+
+    // When the user clicks on the button, open the modal
+
+    btn.onclick = function() {
+            modal.style.display = "block";
+        }
+        // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = "none";
     }
 
-    function show(div) {
-        $('#' + div).show();
-    }
-
-    //ABOUT
-    // Get the modal
-    $("#aboutPage").ready(function() {
-
-        var modal = document.getElementById("myModal");
-
-        // // Get the button that opens the modal
-        var btn = document.getElementById("myBtn");
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
-
-        // When the user clicks on the button, open the modal
-
-        btn.onclick = function() {
-                modal.style.display = "block";
-            }
-            // When the user clicks on <span> (x), close the modal
-        span.onclick = function() {
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
             modal.style.display = "none";
         }
+    }
 
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
+    $(window).keydown(function(event) {
+        if (event.keyCode == 27) {
+            modal.style.display = "none";
         }
-
-        $(window).keydown(function(event) {
-            if (event.keyCode == 27) {
-                modal.style.display = "none";
-            }
-        });
     });
+});
 
-    function get_brightness(r, g, b) {
-        var brightness = Math.round(parseInt(r) +
-            parseInt(g) +
-            parseInt(b));
-        text_color = (brightness > 375) ? 'black' : 'white';
-        return text_color
-    }
+function get_brightness(r, g, b) {
+    var brightness = Math.round(parseInt(r) +
+        parseInt(g) +
+        parseInt(b));
+    text_color = (brightness > 375) ? 'black' : 'white';
+    return text_color
+}
 
-    function hexToRgb(hex) {
-        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result ? {
-            r: parseInt(result[1], 16),
-            g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16)
-        } : null;
-    }
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+}
 
-    function draw_balls(color, score) {
+function draw_balls(color, score) {
 
-        var c = document.getElementById("scoreCanvas");
-        scoreCanvas = c.getContext("2d")
-        scoreCanvas.beginPath();
-        scoreCanvas.arc(ball_position, 30, 30, 0, 2 * Math.PI); // circle
-        scoreCanvas.fillStyle = color; //color
-        scoreCanvas.fill();
-        scoreCanvas.font = "18px Ariel";
-        res = hexToRgb(color2)
-        scoreCanvas.fillStyle = get_brightness(res.r, res.g, res.b)
-            // scoreCanvas.fillStyle = "white"
-        scoreCanvas.fillText(score, ball_position - 5, 30 + 3);
-        ball_position += 100
-    }
+    var c = document.getElementById("scoreCanvas");
+    scoreCanvas = c.getContext("2d")
+    scoreCanvas.beginPath();
+    scoreCanvas.arc(ball_position, 30, 30, 0, 2 * Math.PI); // circle
+    scoreCanvas.fillStyle = color; //color
+    scoreCanvas.fill();
+    scoreCanvas.font = "18px Ariel";
+    res = hexToRgb(color2)
+    scoreCanvas.fillStyle = get_brightness(res.r, res.g, res.b)
+        // scoreCanvas.fillStyle = "white"
+    scoreCanvas.fillText(score, ball_position - 5, 30 + 3);
+    ball_position += 100
+}
