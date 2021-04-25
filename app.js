@@ -38,7 +38,7 @@ var userNameInGame;
 var cell_height;
 var cell_width;
 var object_radius;
-var pacman_lives = 5;
+var pacman_lives;
 var positions = [
     [1, 1],
     [1, board_size - 2],
@@ -80,6 +80,7 @@ function initialGameBoard() {
 
 function StartGame() {
 
+    pacman_lives = 5
     initialGameBoard();
     score = 0;
     pac_color = "yellow";
@@ -478,7 +479,6 @@ function UpdateMonstersPosition() {
         if (monster.x == shape.i && monster.y == shape.j) {
             killPacman()
             Draw();
-
             return;
         }
         if (direction == 1) { //up
@@ -518,8 +518,9 @@ function killPacman() {
     if (pacman_lives > 0) {
         pacman_lives--;
         alert("Got you!! You have " + pacman_lives + " more lives")
-        continueGame()
-            //TODO: place pacman and monsters
+        continueGame();
+        initialGamePage();
+        //TODO: place pacman and monsters
 
     } else {
         alert("Loser!")
