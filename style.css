@@ -50,20 +50,34 @@ button:hover {
     opacity: 0.5;
 }
 
+#myBtn {
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0.0);
+    color: white;
+    font-size: 20px;
+    font-family: 'Play', sans-serif;
+    opacity: 1;
+}
+
+#myBtn:hover {
+    cursor: pointer;
+}
+
 
 /* menu-items */
 
 ul {
-    list-style-type: none;
-    height: 35px;
-    line-height: 35px;
+    /* list-style-type: none; */
+    /* height: 15px; */
+    /* line-height: 5px; */
     margin: 10px;
     margin-top: 20px;
-    padding: 0;
+    /* padding: 0px; */
     background-color: black;
     color: white;
     font-size: 20px;
     border-radius: 15px;
+    align-items: baseline;
 }
 
 li {
@@ -114,9 +128,10 @@ input[type=password],
 input[type=email],
 select {
     width: 30%;
-    padding: 15px;
-    margin: 5px 0 22px 0;
+    padding: 12px;
+    margin: 5px 0 15px 10px;
     display: inline-block;
+    /* float: left; */
     border: none;
     background: #f1f1f1;
 }
@@ -249,6 +264,7 @@ canvas {
     color: red;
     font-weight: bolder;
     min-height: 20px;
+    margin-top: 0px;
     display: block;
     font-size: small;
 }
