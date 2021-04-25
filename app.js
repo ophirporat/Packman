@@ -91,6 +91,7 @@ function initialGameBoard() {
 function StartGame() {
     window.clearInterval(pacman_interval);
     window.clearInterval(monsters_interval);
+    window.clearInterval(gift_interval);
     pacman_lives = 5
     initialGameBoard();
     score = 0;
@@ -162,7 +163,7 @@ function StartGame() {
     ball_position = 190
     pacman_interval = setInterval(UpdatePacmanPosition, 150);
     monsters_interval = setInterval(UpdateMonstersPosition, 500);
-    gift_interval = setInterval(UpdateGiftPosition, 150);
+    gift_interval = setInterval(UpdateGiftPosition, 350);
 }
 
 function createWalls() {
