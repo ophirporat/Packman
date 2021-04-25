@@ -130,7 +130,7 @@ select {
     width: 30%;
     padding: 12px;
     margin: 15px 5px 0 10px;
-    display: block;
+    display: inline-block;
     /* float: left; */
     border: none;
     background: #f1f1f1;
