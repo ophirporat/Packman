@@ -49,26 +49,27 @@
 
         <div style="display: none;" id="registerPage">
 
-            <form id="registerForm">
-                <div class="container">
-                    <h1>Register</h1>
-                    <p>Please fill in this form to create an account.</p>
-                    <hr>
 
+            <div class="container">
+                <h1>Register</h1>
+                <p>Please fill in this form to create an account.</p>
+                <hr>
+                <form id="registerForm">
                     <label for="username"><b>UserName</b></label>
-                    <input type="text" placeholder="Enter User Name" name="username" id="username">
+                    <span><input type="text" placeholder="Enter User Name" name="username" id="username"></span>
                     <br/>
                     <label for="password"><b>Password</b></label>
-                    <input type="password" placeholder="Enter Password" name="password" id="password">
+                    <span><input type="password" placeholder="Enter Password" name="password" id="password"></span>
                     <br/>
                     <label for="fullName"><b>Full Name</b></label>
-                    <input type="text" placeholder="Enter Your Name" name="fullName" id="fullName">
+                    <span><input type="text" placeholder="Enter Your Name" name="fullName" id="fullName"></span>
                     <br/>
                     <label for="email"><b>Email</b></label>
-                    <input type="email" placeholder="Enter Email" name="email" id="email">
+                    <span><input type="email" placeholder="Enter Email" name="email" id="email"></span>
                     <br/>
                     <label for="birthday"><b>Date of Birth</label>
-                    <input type="date" id="birthday" name="birthday">
+                    <span><input type="date" id="birthday" name="birthday"></span>
+                    <br/>
                     <br/>
                     <!-- <input type="submit"> -->
                     <!-- <SELECT id="year" name="yyyy" onchange="change_year(this)">
@@ -78,15 +79,17 @@
                     <SELECT id="day" name="dd">
 								</SELECT>
                     -->
-                    <button type="submit" class="registerbtn">Register</button>
-                </div>
+                </form>
+            </div>
+            <button type="submit" class="registerbtn">Register</button>
 
-                <div class="container signin">
-                    <p>Already have an account?
-                        <button id="signin_from_register" onclick="switchDivs('loginPage')">Sign in</button>
-                    </p>
-                </div>
-            </form>
+            <div class="container signin">
+                <p>Already have an account?
+                    <button id="signin_from_register" onclick="switchDivs('loginPage')">Sign in</button>
+                </p>
+            </div>
+
+
 
         </div>
 

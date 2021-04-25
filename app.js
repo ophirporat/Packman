@@ -60,6 +60,8 @@ function initialGamePage() {
     document.getElementById('monsters_amount').innerHTML = "Monsters amount : " + monstersAmount;
     document.getElementById('lives').innerHTML = "Lives : " + pacman_lives;
 
+    audio.pause();
+    audio.currentTime = 0;
     audio.play(); //#TODO: make the music stop when div change
 
 }
@@ -75,6 +77,7 @@ function initialGameBoard() {
             board[i][j] = 0;
         }
     }
+    audio.play();
 }
 
 
@@ -518,15 +521,17 @@ function killPacman() {
     if (pacman_lives > 0) {
         pacman_lives--;
         alert("Got you!! You have " + pacman_lives + " more lives")
-        continueGame();
+        audio.pause();
+        // audio.currentTime = 0;
         initialGamePage();
-        //TODO: place pacman and monsters
+        continueGame();
 
     } else {
         alert("Loser!")
+            // audio.pause();
+
 
     }
-    audio.pause();
 }
 
 function continueGame() {
@@ -545,6 +550,14 @@ function continueGame() {
     Draw()
 }
 
+function resetGame() {
+    window.clearInterval(pacman_interval);
+    window.clearInterval(monsters_interval);
+
+    audio.pause();
+    audio.currentTime = 0;
+}
+
 function findRandomEmptyCellForPacman(board) {
     var i = Math.floor(Math.random() * (board_size - 2) + 1);
     var j = Math.floor(Math.random() * (board_size - 2) + 1);
@@ -557,9 +570,12 @@ function findRandomEmptyCellForPacman(board) {
 
 function switchDivs(divId) {
     $('#' + currPage).hide();
-    // $('#' + currPage)[0].reset();
     currPage = divId
+    if (divId == "gamePage") audio.play();
+    else resetGame();
+
     $('#' + divId).show();
+
 }
 
 
@@ -788,7 +804,7 @@ function checkKeyValidation(key, role) {
 // additional rules of form validation
 
 $.validator.addMethod("validPassword", function(value) {
-    return /^(?=.[A-Za-z])(?=.\d)[A-Za-z\d]{6,}$/.test(value);
+    return /^(?=.*[A-Za-z])(?=.*\d)[0-9a-zA-Z]{6,}$/.test(value);
 });
 
 $.validator.addMethod("validName", function(value) {
