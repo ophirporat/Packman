@@ -872,7 +872,6 @@ $(document).ready(function() {
 
         },
 
-
         messages: {
             username: "Please enter username",
             password: {
@@ -903,11 +902,7 @@ $(document).ready(function() {
 
             switchDivs("loginPage");
             $('#registerForm')[0].reset();
-
-
         }
-
-
     });
 
     //Login
