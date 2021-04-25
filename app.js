@@ -8,6 +8,7 @@ var start_time;
 var time_elapsed;
 var pacman_interval;
 var monsters_interval;
+var gift_interval;
 var currPage = 'welcomePage';
 var food_remain = 50;
 var monstersAmount;
@@ -21,7 +22,6 @@ var leftkey;
 var userNameInGame;
 var randomBall = 0;
 var balls = [food_remain - (Math.floor(food_remain * 0.3) + Math.floor(food_remain * 0.1)), Math.floor(food_remain * 0.3), Math.floor(food_remain * 0.1)]
-    // var monsters =  
 var users = [
     ['k', 'k']
 ];
@@ -31,6 +31,7 @@ var time_limit;
 var x; //position
 var monsters;
 var monsters_positions;
+var gift;
 var food_settings;
 var center = new Object();
 var audio = new Audio('sounds/Pac-Man-Theme-Song.mp3');
@@ -45,6 +46,8 @@ var positions = [
     [board_size - 2, board_size - 2],
     [board_size - 2, 1]
 ];
+var scoreCanvas;
+var ball_position = 190
 
 
 $(document).ready(function() {
@@ -59,6 +62,11 @@ function initialGamePage() {
     document.getElementById('food_colors').innerHTML = "Food colors : ";
     document.getElementById('monsters_amount').innerHTML = "Monsters amount : " + monstersAmount;
     document.getElementById('lives').innerHTML = "Lives : " + pacman_lives;
+
+    document.getElementById('uplbl').innerHTML = "UP: " + upkey
+    document.getElementById('downlbl').innerHTML = "DOWN: " + downkey;
+    document.getElementById('leftlbl').innerHTML = "LEFT: " + leftkey;
+    document.getElementById('rightlbl').innerHTML = "RIGHT: " + rightkey;
     audio.pause();
     audio.currentTime = 0;
     audio.play(); //#TODO: make the music stop when div change
@@ -90,7 +98,8 @@ function StartGame() {
     var pacman_remain = 1;
     start_time = new Date();
     // var obsticals = [Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9)]
-    create_monsters()
+    create_monsters();
+    create_gift();
     initialGamePage();
     createWalls();
     for (var i = 0; i < board_size - 1; i++) {
@@ -130,19 +139,21 @@ function StartGame() {
     document.addEventListener(
         "keydown",
         function(e) {
-            keysDown[e.keyCode] = true;
+            keysDown[e.key] = true;
         },
         false
     );
     document.addEventListener(
         "keyup",
         function(e) {
-            keysDown[e.keyCode] = false;
+            keysDown[e.key] = false;
         },
         false
     );
+    ball_position = 190
     pacman_interval = setInterval(UpdatePacmanPosition, 150);
     monsters_interval = setInterval(UpdateMonstersPosition, 500);
+    gift_interval = setInterval(UpdateGiftPosition, 150);
 }
 
 function createWalls() {
@@ -316,13 +327,19 @@ function Draw() {
         draw_monster(u)
     }
 
+    draw_gift();
+
 }
 
 
 function draw_monster(monster_index) { //put a picture
     let monster = monsters[monster_index];
     // context.drawImage(monster.image, monster.x - cell_width / 2, monster.y - cell_height / 2, cell_width / 1.2, cell_height / 1.2);
-    context.drawImage(monsters[monster_index].image, cell_height * monsters[monster_index].x, cell_width * monsters[monster_index].y, cell_height, cell_width)
+    context.drawImage(monster.image, cell_height * monster.x, cell_width * monster.y, cell_height, cell_width)
+}
+
+function draw_gift() { //put a picture
+    context.drawImage(gift.image, cell_height * gift.x, cell_width * gift.y, cell_height, cell_width)
 }
 
 function draw_pacman(direction, center) {
@@ -374,7 +391,18 @@ function create_monsters() {
         monsters[i].image = new Image();
         monsters[i].image.src = "images/monster" + (i + 1) + ".jpg";
     }
+}
 
+function create_gift() {
+    gift = new Object();
+    let position = positions[Math.floor(Math.random() * [positions].length)];
+    gift.x = position[0];
+    gift.y = position[1];
+    gift.prev_x = position[0];
+    gift.prev_y = position[1];
+    gift.image = new Image();
+    gift.image.src = "images/gift.png";
+    gift.show = true;
 
 }
 
@@ -506,6 +534,47 @@ function UpdateMonstersPosition() {
     Draw();
 
 
+}
+
+function UpdateGiftPosition() {
+    if (gift.show) {
+
+        let up;
+        let down;
+        let left;
+        let right;
+
+        if (gift.x > 1) {
+            left = [gift.x - 1, gift.y];
+        }
+        if (gift.x < board_size - 2) {
+            right = [gift.x + 1, gift.y];
+        }
+        if (gift.y > 1) {
+            up = [gift.x, gift.y - 1];
+        }
+        if (gift.y < board_size - 2) {
+            down = [gift.x, gift.y + 1];
+        }
+
+        let direction = [up, down, left, right];
+
+
+        if (left == null || board[left[0]][left[1]] == 4 || gift.prev_x == left) direction.remove(left);
+        else if (right == null || board[right[0]][right[1]] == 4 || gift.prev_x == right) direction.remove(right);
+        else if (up == null || board[up[0]][up[1]] == 4 || gift.prev_y == up) direction.remove(up);
+        else if (down == null || board[down[0]][down[1]] == 4 || gift.prev_y == down) direction.remove(down);
+
+        let chosen_direction = direction[Math.floor(Math.random() * [positions].length)];
+
+        gift.prev_x = gift.x;
+        gift.prev_y = gift.y;
+        gift.x = chosen_direction[0];
+        gift.y = chosen_direction[1];
+
+    }
+    Draw();
+    // draw_gift();
 }
 
 function killPacman() {
@@ -668,6 +737,7 @@ function hide(divId) {
 // }
 
 function updateGridDetails() {
+
     // var upkey = 
     let valid = checkKeyValidation(document.getElementById("up").value, "up")
         // if (!valid) return false;
@@ -708,6 +778,10 @@ function updateGridDetails() {
     color1 = document.getElementById("ball1").value;
     color2 = document.getElementById("ball2").value;
     color3 = document.getElementById("ball3").value;
+    draw_balls(color1, 5)
+    draw_balls(color2, 15)
+    draw_balls(color3, 25)
+        // draw_balls(1, 2)
     StartGame()
     switchDivs("gamePage")
     return true;
@@ -734,19 +808,30 @@ function displayKeyCode(event, number) {
 }
 
 function randomize() {
-    upkey = 38;
-    downkey = 40
-    leftkey = 37;
-    rightkey = 39;
+    upkey = "ArrowUp";
+    document.getElementById("up").value = upkey
+    downkey = "ArrowDown"
+    document.getElementById("down").value = downkey
+    leftkey = "ArrowLeft"
+    document.getElementById("left").value = leftkey
+    rightkey = "ArrowRight"
+    document.getElementById("right").value = rightkey
     food_remain = Math.floor(Math.random() * (90 - 50 + 1)) + 50; //change in other functions 
+    document.getElementById("foodNum").value = food_remain
     food_settings = food_remain
-    monstersAmount = Math.floor(Math.random() * 4) + 1;
+
     color1 = getRandomColor();
     color2 = getRandomColor();
     color3 = getRandomColor();
+    document.getElementById("ball1").value = color1
+    document.getElementById("ball2").value = color2
+    document.getElementById("ball3").value = color3
     time_limit = 60;
-    StartGame()
-    switchDivs("gamePage")
+    document.getElementById("timeLeft").value = 60
+    monstersAmount = Math.floor(Math.random() * 4) + 1;
+    document.getElementById("monsters").value = monstersAmount
+        // StartGame()
+        // switchDivs("gamePage")
     return true;
 
 }
@@ -761,226 +846,270 @@ function getRandomColor() {
 }
 
 function checkKeyValidation(key, role) {
-    if (key.length == 1) {
-        // if((/[0-9a-zA-Z]+$/).test(key))
-        // if (role == 'up') upkey = getKeyCode(key)
-        // else if (role == 'down') downkey = getKeyCode(key)
-        // else if (role == 'left') leftkey = getKeyCode(key)
-        // else if (role == 'right') rightkey = getKeyCode(key)
-        // if (role == 'up') upkey = String.fromCharCode(key)
-        // else if (role == 'down') downkey = String.fromCharCode(key)
-        // else if (role == 'left') leftkey = String.fromCharCode(key)
-        // else if (role == 'right') rightkey = String.fromCharCode(key)
-        // return true;
-    } //check with non letters input
-    else if (key.length == 0) {
-        // alert("defult key chosen for " + role + " key");
-        if (role == 'up') upkey = 38
-        else if (role == 'down') downkey = 40
-        else if (role == 'left') leftkey = 37
-        else if (role == 'right') rightkey = 39
-        return true;
+    if (key.length == 0) {
+        upkey = "ArrowUp";
+        downkey = "ArrowDown"
+        leftkey = "ArrowLeft"
+        rightkey = "ArrowRight"
+    }
+    // if((/[0-9a-zA-Z]+$/).test(key))
+    // if (role == 'up') upkey = getKeyCode(key)
+    // else if (role == 'down') downkey = getKeyCode(key)
+    // else if (role == 'left') leftkey = getKeyCode(key)
+    // else if (role == 'right') rightkey = getKeyCode(key)
+    // if (role == 'up') upkey = String.fromCharCode(key)
+    // else if (role == 'down') downkey = String.fromCharCode(key)
+    // else if (role == 'left') leftkey = String.fromCharCode(key)
+    // else if (role == 'right') rightkey = String.fromCharCode(key)
+    // return true;
+    // } //check with non letters input
+    // else if (key.length == 0) {
+    // alert("defult key chosen for " + role + " key");
+    else {
+        if (role == 'up') upkey = key
+        else if (role == 'down') downkey = key
+        else if (role == 'left') leftkey = key
+        else if (role == 'right') rightkey = key
+    }
+    return true;
 
-    } else {}
-    //  alert("invalid output for " + role + " key")};
-    return false;
-}
+    // function getKeyCode(char) {
 
-// function getKeyCode(char) {
+    //     var keyCode = char.charCodeAt(0);
+    //     if (keyCode > 90) { // 90 is keyCode for 'z'
+    //         return keyCode - 32;
+    //     }
+    //     return keyCode;
+    // }
 
-//     var keyCode = char.charCodeAt(0);
-//     if (keyCode > 90) { // 90 is keyCode for 'z'
-//         return keyCode - 32;
-//     }
-//     return keyCode;
-// }
+    // additional rules of form validation
 
-// additional rules of form validation
+    $.validator.addMethod("validPassword", function(value) {
+        return /^(?=.*[A-Za-z])(?=.*\d)[0-9a-zA-Z]{6,}$/.test(value);
+    });
 
-$.validator.addMethod("validPassword", function(value) {
-    return /^(?=.*[A-Za-z])(?=.*\d)[0-9a-zA-Z]{6,}$/.test(value);
-});
+    $.validator.addMethod("validName", function(value) {
+        return /^[a-zA-Z ]+$/.test(value);
+    });
 
-$.validator.addMethod("validName", function(value) {
-    return /^[a-zA-Z ]+$/.test(value);
-});
+    $.validator.addMethod("passwordMatch", function() {
+        let username = $('#uname').val();
+        let password = $('#pass').val();
 
-$.validator.addMethod("passwordMatch", function() {
-    let username = $('#uname').val();
-    let password = $('#pass').val();
+        let validUserName = "";
+        let validPassword = "";
+        for (var i = 0; i < users.length; i++) {
+            if (users[i][0] == username) {
+                validUserName = users[i][0];
 
-    let validUserName = "";
-    let validPassword = "";
-    for (var i = 0; i < users.length; i++) {
-        if (users[i][0] == username) {
-            validUserName = users[i][0];
-
-            if (users[i][1] == password) {
-                validPassword = users[i][1];
-                break;
+                if (users[i][1] == password) {
+                    validPassword = users[i][1];
+                    break;
+                }
             }
         }
-    }
-    if (validUserName != "") {
-        if (password == "") {
-            return false;
+        if (validUserName != "") {
+            if (password == "") {
+                return false;
 
-        } else if (validPassword == "") {
-            return false;
+            } else if (validPassword == "") {
+                return false;
 
+            } else {
+                return true;
+            }
         } else {
-            return true;
-        }
-    } else {
-        return false;
-    }
-});
-
-
-//forms validation 
-$(document).ready(function() {
-
-    //register
-    $("#registerForm").validate({
-        errorClass: 'errors',
-        rules: {
-            username: {
-                required: true
-            },
-            password: {
-                required: true,
-                minlength: 6,
-                validPassword: true,
-            },
-            fullName: {
-                required: true,
-                validName: true,
-            },
-            email: {
-                required: true,
-                email: true,
-            },
-            birthday: {
-                required: true,
-            },
-
-        },
-
-
-        messages: {
-            username: "Please enter username",
-            password: {
-                required: "Please enter a password",
-                minlength: "Password must consist at least 6 characters",
-                validPassword: "Please enter a valid password"
-            },
-            fullName: {
-                required: "Please enter your full name",
-                validName: "Name can only consist alphabetic chars"
-            },
-            email: {
-                required: "Please enter your Email",
-                email: "Please enter valid Email",
-            },
-            birthday: {
-                required: "Please enter your birth date",
-            },
-        },
-
-        submitHandler: function() {
-            //add user to users array
-
-            let username = $('#username').val();
-            let password = $('#password').val();
-
-            users.push([username, password]);
-
-            switchDivs("loginPage");
-            $('#registerForm')[0].reset();
-
-
-        }
-
-
-    });
-
-    //Login
-    $("#loginForm").validate({
-        errorClass: 'errors',
-        rules: {
-            uname: {
-                required: true
-            },
-            pass: {
-                required: true,
-                passwordMatch: true,
-            },
-        },
-
-        messages: {
-            uname: "Please enter username",
-            pass: {
-                required: "Please enter a password",
-                passwordMatch: "Incorrect password"
-            },
-        },
-
-        submitHandler: function() {
-            userNameInGame = $('#uname').val();
-            switchDivs('settingsPage');
-            $('#loginForm')[0].reset();
-
+            return false;
         }
     });
-});
 
 
-function displayKeyCode(event, number) {
-    if (number == 1) id = "up";
-    else if (number == 2) id = "down";
-    else if (number == 3) id = "left";
-    else if (number == 4) id = "right";
-    document.getElementById(id).value = event.key;
-    // var char = event.which || event.keyCode;
+    //forms validation 
+    $(document).ready(function() {
 
-}
+        //register
+        $("#registerForm").validate({
+            errorClass: 'errors',
+            rules: {
+                username: {
+                    required: true
+                },
+                password: {
+                    required: true,
+                    minlength: 6,
+                    validPassword: true,
+                },
+                fullName: {
+                    required: true,
+                    validName: true,
+                },
+                email: {
+                    required: true,
+                    email: true,
+                },
+                birthday: {
+                    required: true,
+                },
 
-function show(div) {
-    $('#' + div).show();
-}
+            },
 
-//ABOUT
-// Get the modal
-$("#aboutPage").ready(function() {
 
-    var modal = document.getElementById("myModal");
+            messages: {
+                username: "Please enter username",
+                password: {
+                    required: "Please enter a password",
+                    minlength: "Password must consist at least 6 characters",
+                    validPassword: "Please enter a valid password"
+                },
+                fullName: {
+                    required: "Please enter your full name",
+                    validName: "Name can only consist alphabetic chars"
+                },
+                email: {
+                    required: "Please enter your Email",
+                    email: "Please enter valid Email",
+                },
+                birthday: {
+                    required: "Please enter your birth date",
+                },
+            },
 
-    // // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
+            submitHandler: function() {
+                //add user to users array
 
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
+                let username = $('#username').val();
+                let password = $('#password').val();
 
-    // When the user clicks on the button, open the modal
+                users.push([username, password]);
 
-    btn.onclick = function() {
-            modal.style.display = "block";
+                switchDivs("loginPage");
+                $('#registerForm')[0].reset();
+
+
+            }
+
+
+        });
+
+        //Login
+        $("#loginForm").validate({
+            errorClass: 'errors',
+            rules: {
+                uname: {
+                    required: true
+                },
+                pass: {
+                    required: true,
+                    passwordMatch: true,
+                },
+            },
+
+            messages: {
+                uname: "Please enter username",
+                pass: {
+                    required: "Please enter a password",
+                    passwordMatch: "Incorrect password"
+                },
+            },
+
+            submitHandler: function() {
+                userNameInGame = $('#uname').val();
+                switchDivs('settingsPage');
+                $('#loginForm')[0].reset();
+
+            }
+        });
+    });
+
+
+    function displayKeyCode(event, number) {
+        if (number == 1) {
+            id = "up";
+            upkey = event.key
+        } else if (number == 2) {
+            id = "down";
+            downkey = event.key
+
+        } else if (number == 3) {
+            id = "left";
+            leftkey = event.key
+        } else if (number == 4) {
+            id = "right";
+            rightkey = event.key
+
         }
-        // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-        modal.style.display = "none";
+        document.getElementById(id).value = event.key;
     }
 
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == modal) {
+    function show(div) {
+        $('#' + div).show();
+    }
+
+    //ABOUT
+    // Get the modal
+    $("#aboutPage").ready(function() {
+
+        var modal = document.getElementById("myModal");
+
+        // // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on the button, open the modal
+
+        btn.onclick = function() {
+                modal.style.display = "block";
+            }
+            // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
             modal.style.display = "none";
         }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        $(window).keydown(function(event) {
+            if (event.keyCode == 27) {
+                modal.style.display = "none";
+            }
+        });
+    });
+
+    function get_brightness(r, g, b) {
+        var brightness = Math.round(parseInt(r) +
+            parseInt(g) +
+            parseInt(b));
+        text_color = (brightness > 375) ? 'black' : 'white';
+        return text_color
     }
 
-    $(window).keydown(function(event) {
-        if (event.keyCode == 27) {
-            modal.style.display = "none";
-        }
-    });
-});
+    function hexToRgb(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : null;
+    }
+
+    function draw_balls(color, score) {
+
+        var c = document.getElementById("scoreCanvas");
+        scoreCanvas = c.getContext("2d")
+        scoreCanvas.beginPath();
+        scoreCanvas.arc(ball_position, 30, 30, 0, 2 * Math.PI); // circle
+        scoreCanvas.fillStyle = color; //color
+        scoreCanvas.fill();
+        scoreCanvas.font = "18px Ariel";
+        res = hexToRgb(color2)
+        scoreCanvas.fillStyle = get_brightness(res.r, res.g, res.b)
+            // scoreCanvas.fillStyle = "white"
+        scoreCanvas.fillText(score, ball_position - 5, 30 + 3);
+        ball_position += 100
+    }
