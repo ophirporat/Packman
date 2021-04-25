@@ -59,7 +59,6 @@ function initialGamePage() {
     document.getElementById('food_colors').innerHTML = "Food colors : ";
     document.getElementById('monsters_amount').innerHTML = "Monsters amount : " + monstersAmount;
     document.getElementById('lives').innerHTML = "Lives : " + pacman_lives;
-
     audio.pause();
     audio.currentTime = 0;
     audio.play(); //#TODO: make the music stop when div change
@@ -77,7 +76,7 @@ function initialGameBoard() {
             board[i][j] = 0;
         }
     }
-    audio.play();
+    audio.play()
 }
 
 
@@ -142,7 +141,7 @@ function StartGame() {
         },
         false
     );
-    pacman_interval = setInterval(UpdatePacmanPosition, 100);
+    pacman_interval = setInterval(UpdatePacmanPosition, 150);
     monsters_interval = setInterval(UpdateMonstersPosition, 500);
 }
 
@@ -319,17 +318,6 @@ function Draw() {
 
 }
 
-function getMonsterIndex(i, j) {
-
-    for (var k = 0; k < monsters.length; k++) {
-        if (monsters[k].x == i && monsters[k].y == j) return k;
-    }
-    return -1
-
-    // for (var k = 0; k < monsters_positions.length; k++) {
-    //     if (monsters_positions[k][0] == i && monsters_positions[k][1] == j) return k;
-    // }
-}
 
 function draw_monster(monster_index) { //put a picture
     let monster = monsters[monster_index];
@@ -392,6 +380,7 @@ function create_monsters() {
 
 
 function UpdatePacmanPosition() {
+
     board[shape.i][shape.j] = 0;
     x = GetKeyPressed();
     if (x == 1) {
@@ -428,6 +417,13 @@ function UpdatePacmanPosition() {
     }
     board[shape.i][shape.j] = 2;
     document.getElementById("lblScore").value = score;
+    for (var i = 0; i < monstersAmount; i++) {
+        let monster = monsters[i];
+        if (monster.x == shape.i && monster.y == shape.j) {
+            killPacman()
+            return
+        }
+    }
     var currentTime = new Date();
     time_elapsed = (currentTime - start_time) / 1000;
 
@@ -476,8 +472,6 @@ function getMonsterDirection(monsterIndex) { //decide which direction to go acco
 function UpdateMonstersPosition() {
     for (var i = 0; i < monstersAmount; i++) {
         let direction = getMonsterDirection(i);
-        // let yPosition = monsters_positions[i][1];
-        // let xPosition = monsters_positions[i][0];
         let monster = monsters[i];
         if (monster.x == shape.i && monster.y == shape.j) {
             killPacman()
@@ -520,18 +514,17 @@ function killPacman() {
     if (score > 9) score -= 10;
     if (pacman_lives > 0) {
         pacman_lives--;
-        alert("Got you!! You have " + pacman_lives + " more lives")
         audio.pause();
-        // audio.currentTime = 0;
-        initialGamePage();
+        // alert("Got you!! You have " + pacman_lives + " more lives")
         continueGame();
+        initialGamePage();
+        //TODO: place pacman and monsters
 
     } else {
         alert("Loser!")
-            // audio.pause();
-
 
     }
+    audio.pause();
 }
 
 function continueGame() {
@@ -545,8 +538,9 @@ function continueGame() {
     shape.i = new_position[0]
     shape.j = new_position[1]
     board[shape.i][shape.j] = 2
-    pacman_interval = setInterval(UpdatePacmanPosition, 100);
+    pacman_interval = setInterval(UpdatePacmanPosition, 150);
     monsters_interval = setInterval(UpdateMonstersPosition, 500);
+
     Draw()
 }
 
@@ -872,6 +866,7 @@ $(document).ready(function() {
 
         },
 
+
         messages: {
             username: "Please enter username",
             password: {
@@ -902,7 +897,11 @@ $(document).ready(function() {
 
             switchDivs("loginPage");
             $('#registerForm')[0].reset();
+
+
         }
+
+
     });
 
     //Login
