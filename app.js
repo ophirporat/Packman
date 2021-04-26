@@ -35,6 +35,7 @@ var gift;
 var food_settings;
 var center = new Object();
 var audio = new Audio('sounds/Pac-Man-Theme-Song.mp3');
+var kill_sound = new Audio('sounds/pacman_killed.mp3');
 var userNameInGame;
 var cell_height;
 var cell_width;
@@ -53,7 +54,15 @@ var ball_position = 190
 $(document).ready(function() {
     context = canvas.getContext("2d");
     // StartGame();
+
+    //disable scroll page using key arrows
+    window.addEventListener("keydown", function(e) {
+        if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].indexOf(e.code) > -1) {
+            e.preventDefault();
+        }
+    }, false);
 });
+
 
 function initialGamePage() {
     document.getElementById('username_game').innerHTML = "Hello, " + userNameInGame;
@@ -63,13 +72,14 @@ function initialGamePage() {
     document.getElementById('monsters_amount').innerHTML = "Monsters amount : " + monstersAmount;
     document.getElementById('lives').innerHTML = "Lives : " + pacman_lives;
 
-    document.getElementById('uplbl').innerHTML = "UP: " + upkey
-    document.getElementById('downlbl').innerHTML = "DOWN: " + downkey;
-    document.getElementById('leftlbl').innerHTML = "LEFT: " + leftkey;
-    document.getElementById('rightlbl').innerHTML = "RIGHT: " + rightkey;
+    document.getElementById('uplbl').innerHTML = "UP : " + upkey
+    document.getElementById('downlbl').innerHTML = "DOWN : " + downkey;
+    document.getElementById('leftlbl').innerHTML = "LEFT : " + leftkey;
+    document.getElementById('rightlbl').innerHTML = "RIGHT : " + rightkey;
     audio.pause();
     audio.currentTime = 0;
-    audio.play(); //#TODO: make the music stop when div change
+    audio.play();
+    audio.volume = 0.05;
 
 }
 
@@ -84,6 +94,7 @@ function initialGameBoard() {
             board[i][j] = 0;
         }
     }
+    audio.volume = 0.05;
     audio.play()
 }
 
@@ -92,7 +103,8 @@ function StartGame() {
     window.clearInterval(pacman_interval);
     window.clearInterval(monsters_interval);
     window.clearInterval(gift_interval);
-    pacman_lives = 5
+    pacman_lives = 5;
+    // pacman_lives.src = "images\
     initialGameBoard();
     score = 0;
     pac_color = "yellow";
@@ -328,8 +340,12 @@ function Draw() {
             } else if (board[i][j] == 4) { //wall
                 context.beginPath();
                 context.rect(center.x - cell_width / 2, center.y - cell_height / 2, object_radius, object_radius);
-                context.fillStyle = "grey"; //color
-                context.fill();
+                var wall = new Image(cell_width, cell_height);
+                wall.src = "images/wall.jpg";
+                context.drawImage(wall, center.x - cell_width / 2, center.y - cell_height / 2, cell_height, cell_width);
+
+                // context.fillStyle = "rgb(70, 67, 67)"; //color
+                // context.fill();
             }
 
         }
@@ -412,6 +428,7 @@ function create_monsters() {
 
 function create_gift() {
     gift = new Object();
+    gift.sound = new Audio('sounds/Ta-Da_ Sound.mp3');
 
     let position = findRandomEmptyCell(board);
     //  positions[Math.floor(Math.random() * [positions].length)];
@@ -468,12 +485,16 @@ function UpdatePacmanPosition() {
     for (var i = 0; i < monstersAmount; i++) {
         let monster = monsters[i];
         if (monster.x == shape.i && monster.y == shape.j) {
+            kill_sound.volume = 0.2;
+            kill_sound.play();
             killPacman(monster.is_strong);
 
             return
         } else if (gift.x == shape.i && gift.y == shape.j && gift.show) {
             score += 50;
             gift.show = false;
+            gift.sound.volume = 0.3;
+            gift.sound.play();
             context.clearRect(cell_height * gift.x, cell_width * gift.y, cell_height, cell_width);
             // gift.image.style.display = "none";
             // gift.image.parentNode.removeChild(gift.image);
@@ -533,6 +554,8 @@ function UpdateMonstersPosition() {
         let direction = getMonsterDirection(i);
         let monster = monsters[i];
         if (monster.x == shape.i && monster.y == shape.j) {
+            kill_sound.volume = 0.2;
+            kill_sound.play();
             killPacman(monster.is_strong);
             Draw();
             return;
@@ -597,6 +620,8 @@ function UpdateGiftPosition() {
         if (gift.x == shape.i && gift.y == shape.j) {
             score += 50;
             gift.show = false;
+            gift.sound.volume = 0.3;
+            gift.sound.play();
             context.clearRect(cell_height * gift.x, cell_width * gift.y, cell_height, cell_width); //check
             window.clearInterval(gift_interval)
             return
@@ -693,7 +718,7 @@ function killPacman(is_strong) {
             pacman_lives -= 2;
             continueGame();
             initialGamePage();
-            audio.pause();
+            // audio.pause();
             return
         } else {
             alert("Loser")
@@ -705,18 +730,22 @@ function killPacman(is_strong) {
             pacman_lives--;
             continueGame();
             initialGamePage();
-            audio.pause();
+            // audio.pause();
             return
         } else {
             alert("Loser!")
         }
     }
 
-    audio.pause();
+    // audio.pause();
     return
 }
 
 function continueGame() {
+    audio.play();
+    audio.volume = 0.05;
+
+
     for (var i = 0; i < monstersAmount; i++) {
         cell = positions[i];
         monsters[i].x = cell[0];
@@ -758,6 +787,7 @@ function findRandomEmptyCellForPacman(board) {
 function switchDivs(divId) {
     $('#' + currPage).hide();
     currPage = divId
+    audio.volume = 0.05;
     if (divId == "gamePage") audio.play();
     else resetGame();
 
@@ -1083,7 +1113,7 @@ $(document).ready(function() {
             password: {
                 required: "Please enter a password",
                 minlength: "Password must consist at least 6 characters",
-                validPassword: "Please enter a valid password"
+                validPassword: "Password must consist at least one letter and one digit"
             },
             fullName: {
                 required: "Please enter your full name",
@@ -1129,9 +1159,9 @@ $(document).ready(function() {
         },
 
         messages: {
-            uname: "Please enter username",
+            uname: "Enter username",
             pass: {
-                required: "Please enter a password",
+                required: "Enter a password",
                 passwordMatch: "Incorrect password"
             },
         },
@@ -1227,10 +1257,10 @@ function draw_balls(color, score) {
     var c = document.getElementById("scoreCanvas");
     scoreCanvas = c.getContext("2d")
     scoreCanvas.beginPath();
-    scoreCanvas.arc(ball_position, 30, 30, 0, 2 * Math.PI); // circle
+    scoreCanvas.arc(ball_position, 20, 20, 0, 2 * Math.PI); // circle
     scoreCanvas.fillStyle = color; //color
     scoreCanvas.fill();
-    scoreCanvas.font = "18px Ariel";
+    scoreCanvas.font = "15px Ariel bold";
     res = hexToRgb(color2)
     scoreCanvas.fillStyle = get_brightness(res.r, res.g, res.b)
         // scoreCanvas.fillStyle = "white"

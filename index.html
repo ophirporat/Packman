@@ -24,7 +24,7 @@
 
     <div id="menu">
         <ul>
-            <li onclick="switchDivs('settingsPage')">game</li>
+            <!-- <li onclick="switchDivs('settingsPage')">game</li> -->
             <li onclick="switchDivs('welcomePage')">welcome</li>
             <li onclick="switchDivs('registerPage')">Register</li>
             <li onclick="switchDivs('loginPage')"> Login</li>
@@ -37,14 +37,16 @@
 
     <div id="content">
         <div id="welcomePage">
-            <h1>
+            <h1 id="welcome_label">
                 Welcome to the best <br/> PACMAN Game
             </h1>
             <br/>
-            <br/>
             <div class="logo"> </div>
-            <button id="register" onclick="switchDivs('registerPage')">Register</button>
-            <button id="login" onclick="switchDivs('loginPage')">Login</button>
+            <button id="register_button" onclick="switchDivs('registerPage')">Register</button>
+            <button id="login_button" onclick="switchDivs('loginPage')">Login</button>
+            <br/>
+            <br/>
+            <br/>
         </div>
 
         <div style="display: none;" id="registerPage">
@@ -56,14 +58,14 @@
                     <label for="username"><b>UserName</b></label>
                     <span><input type="text" placeholder="Enter User Name" name="username" id="username"></span>
                     <br/>
-                    <label for="password"><b>Password</b></label>
+                    <label for="password"><b>Password  </b></label>
                     <span><input type="password" placeholder="Enter Password" name="password" id="password"></span>
                     <br/>
                     <label for="fullName"><b>Full Name</b></label>
                     <span><input type="text" placeholder="Enter Your Name" name="fullName" id="fullName"></span>
                     <br/>
                     <label for="email"><b>Email</b></label>
-                    <span><input type="email" placeholder="Enter Email" name="email" id="email"></span>
+                    <span><span><input type="email" placeholder="Enter Email" name="email" id="email"></span></span>
                     <br/>
                     <label for="birthday"><b>Date of Birth</label>
                     <span><input type="date" id="birthday" name="birthday"></span>
@@ -100,10 +102,16 @@
                 <span><input type="password" placeholder="Enter Password" id="pass" name="pass"></span>
                 <br/>
                 <br/>
-                <button type="submit">Login</button>
-                <button type="button" class="cancelbtn" onclick="switchDivs('welcomePage')">Cancel</button>
-                <br/>
+                <p class="loginbtns">
+                    <button type="button" id="cancelbtn" class="cancelbtn" onclick="switchDivs('welcomePage')">Cancel</button>
+                    <button type="submit" id="loginbtn">Login</button>
+                </p><br/>
             </form>
+            <div class="container register">
+                <p>Dont have an account yet?
+                    <button id="register_from_login" onclick="switchDivs('registerPage')">Register</button>
+                </p>
+            </div>
 
 
         </div>
@@ -112,30 +120,31 @@
             <h1>
                 Game Settings
             </h1>
+            <p>Choose your game settings or click "Randomize" to random settings</p>
             <label for="gameBottoms :">Game Arrows:</label>
             <i class="material-icons">north</i>
-            <input type="text" maxlength="1" id="up" ONKEYDOWN="return displayKeyCode(event, 1)" name="up">
+            <input type="text" placeholder="UP" maxlength="1" id="up" ONKEYDOWN="return displayKeyCode(event, 1)" name="up">
             <i class="material-icons">south</i>
-            <input type="text" maxlength="1" id="down" ONKEYDOWN="return displayKeyCode(event, 2)" name="down">
+            <input type="text" placeholder="DOWN" maxlength="1" id="down" ONKEYDOWN="return displayKeyCode(event, 2)" name="down">
             <i class="material-icons">west</i>
-            <input type="text" maxlength="1" id="left" ONKEYDOWN="return displayKeyCode(event, 3)" name="left">
+            <input type="text" placeholder="LEFT" maxlength="1" id="left" ONKEYDOWN="return displayKeyCode(event, 3)" name="left">
             <i class="material-icons">east	</i>
-            <input type="text" maxlength="1" id="right" ONKEYDOWN="return displayKeyCode(event, 4)" name="right">
+            <input type="text" placeholder="RIGHT" maxlength="1" id="right" ONKEYDOWN="return displayKeyCode(event, 4)" name="right">
             <br/>
-            <label id="num of food">num of food:</label>
+            <label id="num of food">Food amount:</label>
             <input type="number" id="foodNum" min="50" max="90" name="foodNum">
             <label id="timelimit">Time limit:</label>
-            <input type="number" id="timeLeft" min="60">
-            <p> <label for="colors">Choose your food colors:</label>
-                <br/><br/>
-                <label for="ball1">ball1</label>
-                <input type="color" id="ball1" name="ball1" value="#FFD700">
+            <input type="number" id="timeLeft" min="60"> sec
+            <p id="choose_food_colors"> <label for="colors">Choose your food colors:</label>
                 <br/>
-                <label for="ball2">ball2</label>
-                <input type="color" id="ball2" name="ball2" value="#00BFFF">
+                <label for="ball1">Ball1</label>
+                <input type="color" id="ball1" name="ball1" value="#FFD700"> <span>5 points</span>
                 <br/>
-                <label for="ball2">ball3</label>
-                <input type="color" id="ball3" name="ball3" value="#8B008B"></p>
+                <label for="ball2">Ball2</label>
+                <input type="color" id="ball2" name="ball2" value="#00BFFF"> <span>15 points</span>
+                <br/>
+                <label for="ball2">Ball3</label>
+                <input type="color" id="ball3" name="ball3" value="#8B008B"><span>25 points</span></p>
             <label for="num of monsters">Choose number of monsters:</label>
             <!-- <input type="text" id="monstersNum" name="monstersNum"><br> -->
             <select name="monsters" id="monsters">
@@ -146,6 +155,8 @@
                 <option value="4">4</option>
             </select>
             <br/>
+            <br/>
+
 
             <button onclick="updateGridDetails();"> submit</button>
             <button onclick="randomize()"> randomize</button>
@@ -161,9 +172,16 @@
             <div id="myModal" class="modal">
 
                 <!-- Modal content -->
+
                 <div class="modal-content">
                     <span class="close">&times;</span>
-                    <p>Some text in the Modal..</p>
+                    <p>
+                        <h1 id="about_label">About</h1>
+                        <center><img src="images/pacman_girl.png" height="100px" width="100px"></center>
+                        Thank you for using our Pacman game! We hope you enjoy and come back to play again.<br/> This game built by Ophir Porat and Bar Ifergan, third year students of<br/> Software and Information Systems Engineering in Ben-Gurion University.<br/>                        To built this game we used JavaScript and JQuery.
+                        <br/> You can contact us via Email: <br/> barifer@post.bgu.ac.il ,<br/> ophirpo@post.bgu.ac.il.
+                        <br/>
+                    </p>
                 </div>
 
             </div>
@@ -175,26 +193,32 @@
 
             <!-- <audio id="gameMusic" src="sounds/Pac-Man-Theme-Song.mp3" type="audio/mpeg" preload="auto" loop></audio> -->
             <div class="inline" id="game">
-
-                <p id="username_game"></p>
-
-                <!-- <p>Selected keys: UP: DOWN: LEFT: RIGHT:</p> -->
-                <p>Selected keys:
-                    <label id="uplbl">UP:</label>
-                    <label id="downlbl">DOWN:</label><br>
-                    <label id="leftlbl">LEFT:</label>
-                    <label id="rightlbl">RIGHT:</label>
-                </p>
-                <p>
-                    <canvas id="scoreCanvas" height="60" width="600"></canvas>
-                </p>
-                <p id="game_duration"></p>
-                <p id="food_amount"></p>
-                <p id="food_colors"></p>
-                <p id="monsters_amount"></p>
-                <p id="lives"></p>
+                <h3 id="username_game"></h3>
+                <br/>
+                <div class="show_settings">
 
 
+
+                    <!-- <p>Selected keys: UP: DOWN: LEFT: RIGHT:</p> -->
+                    <span class="label arrows ">Selected keys:</span>
+                    <span class="arrows" id="uplbl"></span>
+                    <span class="arrows" id="downlbl"></span>
+                    <span class="arrows" id="leftlbl"></span>
+                    <span class="arrows" id="rightlbl"></span>
+                    <br/>
+
+                    <span class="label food_colors" id="food_colors"></span>
+                    <canvas class="food_colors" id="scoreCanvas" height="50" width="500"></canvas>
+                    <br/>
+
+
+                    <span class="label inline" id="game_duration"></span>
+                    <span class="label inline" id="food_amount"></span>
+                    <span class="label inline" id="monsters_amount"></span>
+                    <span class="label inline" id="lives"></span>
+
+                </div>
+                <br/>
                 <div class="inline" id="score">
                     <label for="lblScore">SCORE:</label>
                     <input id="lblScore" type="text" readonly />
@@ -203,18 +227,27 @@
                     <label for="lblTime">TIME:</label>
                     <input id="lblTime" type="text" readonly />
                 </div>
-                <div id="newGame">
-                    <button onclick="StartGame();"> New Game</button>
+                <div class="inline" id="new_game">
+                    <button id="newGame" onclick="switchDivs('settingsPage')"> New Game</button>
                 </div>
+
             </div>
             <div class="inline" id="game">
-                <canvas id="canvas" height="600" width="600"></canvas>
+                <canvas id="canvas" height="800" width="800"></canvas>
             </div>
 
         </div>
 
     </div>
-    <div id="footer">
+    <!-- <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/> -->
+    <div class="footer" id="footer">
+        <i class="material-icons">copyright</i>2021 PACMAN, Built using JavaScript-CSS-HTML. By Ophir Porat & Bar Ifergan
+
     </div>
 
     </div>
