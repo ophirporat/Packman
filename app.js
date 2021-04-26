@@ -21,7 +21,7 @@ var rightkey;
 var leftkey;
 var userNameInGame;
 var randomBall = 0;
-var balls = [food_remain - (Math.floor(food_remain * 0.3) + Math.floor(food_remain * 0.1)), Math.floor(food_remain * 0.3), Math.floor(food_remain * 0.1)]
+var balls;
 var users = [
     ['k', 'k']
 ];
@@ -91,6 +91,7 @@ function initialGameBoard() {
 function StartGame() {
     window.clearInterval(pacman_interval);
     window.clearInterval(monsters_interval);
+    window.clearInterval(gift_interval);
     pacman_lives = 5
     initialGameBoard();
     score = 0;
@@ -98,9 +99,9 @@ function StartGame() {
     var cnt = 210;
     var pacman_remain = 1;
     start_time = new Date();
-    // var obsticals = [Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9), Math.floor(Math.random() * 9)]
+    balls = [food_remain - (Math.floor(food_remain * 0.3) + Math.floor(food_remain * 0.1)), Math.floor(food_remain * 0.3), Math.floor(food_remain * 0.1)]
     create_monsters();
-    create_gift();
+
     initialGamePage();
     createWalls();
     for (var i = 0; i < board_size - 1; i++) {
@@ -123,27 +124,28 @@ function StartGame() {
         }
 
     }
+
     var emptyCell;
     while (balls[0] > 0) {
         emptyCell = findRandomEmptyCell(board);
         board[emptyCell[0]][emptyCell[1]] = 1;
-        food_remain--;
+        // food_remain--;
         balls[0]--
     }
     while (balls[1] > 0) {
         emptyCell = findRandomEmptyCell(board);
         board[emptyCell[0]][emptyCell[1]] = 3;
-        food_remain--;
+        // food_remain--;
         balls[1]--
     }
     while (balls[2] > 0) {
         emptyCell = findRandomEmptyCell(board);
         board[emptyCell[0]][emptyCell[1]] = 5;
-        food_remain--;
+        // food_remain--;
         balls[2]--
     }
     food_remain = food_settings
-        // was monsters positions
+    create_gift();
     keysDown = {};
     document.addEventListener(
         "keydown",
@@ -162,7 +164,7 @@ function StartGame() {
     ball_position = 190
     pacman_interval = setInterval(UpdatePacmanPosition, 150);
     monsters_interval = setInterval(UpdateMonstersPosition, 500);
-    gift_interval = setInterval(UpdateGiftPosition, 150);
+    gift_interval = setInterval(UpdateGiftPosition, 350);
 }
 
 function createWalls() {
@@ -335,8 +337,7 @@ function Draw() {
     for (u = 0; u < monstersAmount; u++) {
         draw_monster(u)
     }
-
-    draw_gift();
+    if (gift.show) draw_gift();
 
 }
 
@@ -416,11 +417,12 @@ function create_gift() {
     //  positions[Math.floor(Math.random() * [positions].length)];
     gift.x = position[0];
     gift.y = position[1];
-    gift.prev_x = position[0];
-    gift.prev_y = position[1];
+    // gift.prev_x = position[0];
+    // gift.prev_y = position[1];
     gift.image = new Image();
     gift.image.src = "images/gift.png";
-    gift.show = true;
+    gift.show = false;
+    gift.start = Math.random() * 46
 
 }
 
@@ -469,12 +471,13 @@ function UpdatePacmanPosition() {
             killPacman(monster.is_strong);
 
             return
-        } else if (gift.x == shape.i && gift.y == shape.j) {
+        } else if (gift.x == shape.i && gift.y == shape.j && gift.show) {
             score += 50;
             gift.show = false;
             context.clearRect(cell_height * gift.x, cell_width * gift.y, cell_height, cell_width);
             // gift.image.style.display = "none";
-            gift.image.parentNode.removeChild(gift.image);
+            // gift.image.parentNode.removeChild(gift.image);
+            window.clearInterval(gift_interval)
         }
     }
     var currentTime = new Date();
@@ -564,69 +567,120 @@ function UpdateMonstersPosition() {
 
 }
 
+function getGiftDirection() { //decide which direction to go according to pacman and update position in board
+
+    let direction = new Array()
+
+    //check if monster in the same col with pacman
+    if ((gift.y <= shape.j) && (board[gift.x][gift.y - 1] != 4)) {
+        direction.push(1) // go up
+    }
+    if ((gift.y >= shape.j) && (board[gift.x][gift.y + 1] != 4)) {
+        direction.push(2) //go down
+    }
+    //check if monster in the same row with pacman
+    if ((gift.x <= shape.i) && (board[gift.x - 1][gift.y] != 4)) {
+        direction.push(3) // go left
+    }
+    if ((gift.x >= shape.i) && board[gift.x + 1][gift.y] != 4) {
+        direction.push(4) //go right
+    }
+    var randomNum = Math.floor(Math.random() * (direction.length - 1 + 1))
+
+    return direction[randomNum];
+}
+
 function UpdateGiftPosition() {
-    if (gift.show) {
+    if (gift.start < time_elapsed && gift.start + 15 > time_elapsed) {
+        gift.show = true;
 
         if (gift.x == shape.i && gift.y == shape.j) {
             score += 50;
             gift.show = false;
-            context.clearRect(cell_height * gift.x, cell_width * gift.y, cell_height, cell_width);
+            context.clearRect(cell_height * gift.x, cell_width * gift.y, cell_height, cell_width); //check
+            window.clearInterval(gift_interval)
+            return
         }
-        let up;
-        let down;
-        let left;
-        let right;
+        // let up;
+        // let down;
+        // let left;
+        // let right;
 
-        if (gift.x > 1) {
-            left = [gift.x - 1, gift.y];
+        // if (gift.x > 1) {
+        //     left = [gift.x - 1, gift.y];
+        // }
+        // if (gift.x < board_size - 2) {
+        //     right = [gift.x + 1, gift.y];
+        // }
+        // if (gift.y > 1) {
+        //     up = [gift.x, gift.y - 1];
+        // }
+        // if (gift.y < board_size - 2) {
+        //     down = [gift.x, gift.y + 1];
+        // }
+
+        // let index;
+        // let direction = [up, down, left, right];
+
+
+        // if (left == null || board[left[0]][left[1]] == 4 || gift.prev_x == left[0]) {
+        //     index = direction.indexOf(left);
+        //     direction.splice(index, 1);
+        // }
+
+        // if (right == null || board[right[0]][right[1]] == 4 || gift.prev_x == right[0]) {
+        //     index = direction.indexOf(right);
+        //     direction.splice(index, 1);
+
+        // }
+        // if (up == null || board[up[0]][up[1]] == 4 || gift.prev_y == up[1]) {
+        //     index = direction.indexOf(up);
+        //     direction.splice(index, 1);
+
+        // }
+        // if (down == null || board[down[0]][down[1]] == 4 || gift.prev_y == down[1]) {
+        //     index = direction.indexOf(down);
+        //     direction.splice(index, 1);
+
+        // }
+
+        // let chosen_direction = direction[Math.floor(Math.random() * direction.length + 1)];
+
+        // if (direction.length == 1) chosen_direction = direction[0];
+        // gift.prev_x = gift.x;
+        // gift.prev_y = gift.y;
+        direction = getGiftDirection()
+        if (direction == 1) { //up
+            gift.y--;
+            // // monster_board[monster.x][monster.y - 1] = 6;
+            // monster_board[monster.x][monster.y] = 0;
+
         }
-        if (gift.x < board_size - 2) {
-            right = [gift.x + 1, gift.y];
+        if (direction == 2) { //down
+            // monster_board[monster.x][monster.y + 1] = 6;
+            // monster_board[monster.x][monster.y] = 0;
+            gift.y++;
         }
-        if (gift.y > 1) {
-            up = [gift.x, gift.y - 1];
+        if (direction == 3) { //left
+            // monster_board[monster.x - 1][monster.y] = 6;
+            // monster_board[monster.x][monster.y] = 0;
+            gift.x--;
         }
-        if (gift.y < board_size - 2) {
-            down = [gift.x, gift.y + 1];
+        if (direction == 4) { //right
+            // monster_board[monster.x + 1][monster.y] = 6;
+            // monster_board[monster.x][monster.y] = 0;
+            gift.x++;
         }
-
-        let index;
-        let direction = [up, down, left, right];
-
-
-        if (left == null || board[left[0]][left[1]] == 4 || gift.prev_x == left[0]) {
-            index = direction.indexOf(left);
-            direction.splice(index, 1);
-        }
-
-        if (right == null || board[right[0]][right[1]] == 4 || gift.prev_x == right[0]) {
-            index = direction.indexOf(right);
-            direction.splice(index, 1);
-
-        }
-        if (up == null || board[up[0]][up[1]] == 4 || gift.prev_y == up[1]) {
-            index = direction.indexOf(up);
-            direction.splice(index, 1);
-
-        }
-        if (down == null || board[down[0]][down[1]] == 4 || gift.prev_y == down[1]) {
-            index = direction.indexOf(down);
-            direction.splice(index, 1);
-
-        }
-
-        let chosen_direction = direction[Math.floor(Math.random() * direction.length + 1)];
-
-        if (direction.length == 1) chosen_direction = direction[0];
-        gift.prev_x = gift.x;
-        gift.prev_y = gift.y;
-        gift.x = chosen_direction[0];
-        gift.y = chosen_direction[1];
-
+        // gift.x = chosen_direction[0];
+        // gift.y = chosen_direction[1];
+        // draw_gift();
+        Draw();
+    } else {
+        gift.show = false
     }
-    Draw();
-    // draw_gift();
+
 }
+
 
 function killPacman(is_strong) {
     window.clearInterval(pacman_interval);
@@ -675,7 +729,7 @@ function continueGame() {
     board[shape.i][shape.j] = 2
     pacman_interval = setInterval(UpdatePacmanPosition, 150);
     monsters_interval = setInterval(UpdateMonstersPosition, 500);
-    gift_interval = setInterval(UpdateGiftPosition, 350);
+    // gift_interval = setInterval(UpdateGiftPosition, 350);
 
 
 
