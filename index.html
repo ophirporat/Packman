@@ -8,8 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Play&display=swap" rel="stylesheet">
 
     <script src="./jquery-3.4.1.slim.min.js"></script>
-    <!-- <script src="js/jquery.validate.js"></script>
-    <script src="js/signup-form.js"></script> -->
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.15.1/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/additional-methods.js"></script>
     <script type="text/javascript" src="./app.js"></script>
@@ -73,14 +71,6 @@
                     <span><input type="date" id="birthday" name="birthday"></span>
                     <br/>
                     <br/>
-                    <!-- <input type="submit"> -->
-                    <!-- <SELECT id="year" name="yyyy" onchange="change_year(this)">
-								</SELECT>
-                    <SELECT id="month" name="mm" onchange="change_month(this)">
-								</SELECT>
-                    <SELECT id="day" name="dd">
-								</SELECT>
-                    -->
                     <button type="submit" class="registerbtn">Register</button>
                 </form>
             </div>
@@ -148,9 +138,7 @@
                 <label for="ball2">Ball3</label>
                 <input type="color" id="ball3" name="ball3" value="#8B008B"><span>25 points</span></p>
             <label for="num of monsters">Choose number of monsters:</label>
-            <!-- <input type="text" id="monstersNum" name="monstersNum"><br> -->
             <select name="monsters" id="monsters">
-                <!-- <option value="empty"></option> -->
                 <option value="1" selected="selected">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -166,10 +154,6 @@
         </div>
 
         <div style="display: none;" id="aboutPage">
-
-            <!-- Trigger/Open The Modal -->
-            <!-- <button id="myBtn">Open Modal</button> -->
-
             <!-- The Modal -->
             <div id="myModal" class="modal">
 
@@ -193,15 +177,10 @@
 
         <div style="display: none;" id="gamePage">
 
-            <!-- <audio id="gameMusic" src="sounds/Pac-Man-Theme-Song.mp3" type="audio/mpeg" preload="auto" loop></audio> -->
             <div class="inline" id="game">
                 <h3 id="username_game"></h3>
                 <br/>
                 <div class="show_settings">
-
-
-
-                    <!-- <p>Selected keys: UP: DOWN: LEFT: RIGHT:</p> -->
                     <span class="label arrows ">Selected keys:</span>
                     <span class="arrows" id="uplbl"></span>
                     <span class="arrows" id="downlbl"></span><br>
@@ -212,7 +191,6 @@
                     <span class="label food_colors" id="food_colors"></span>
                     <canvas class="food_colors" id="scoreCanvas" height="50" width="500"></canvas>
                     <br/>
-
 
                     <span class="label inline" id="game_duration"></span>
                     <span class="label inline" id="food_amount"></span>
@@ -241,12 +219,6 @@
         </div>
 
     </div>
-    <!-- <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/> -->
     <div class="footer" id="footer">
         <i class="material-icons">copyright</i>2021 PACMAN, Built using JavaScript-CSS-HTML. By Ophir Porat & Bar Ifergan. ophirpo@post.bgu.ac.il , barifer@post.bgu.ac.il
 

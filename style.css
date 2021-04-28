@@ -18,29 +18,12 @@ body {
     color: white;
 }
 
-
-/* #header {
-    width: 100%;
-    background-image: url("pacman_by_r0maint_d2xp3ug-fullview.jpg");
-    background-repeat: no-repeat;
-    padding: 15px;
-} */
-
 #content {
     margin-top: 80px;
-    /* border-style: solid; */
     place-items: center stretch;
-    /* background-color: rgb(255, 255, 115); */
     background-color: rgba(255, 255, 255, 0.911);
-    /* background-image: url('images/Untitled.png'); */
     border-radius: 15px;
-    /* max-height: 600px; */
 }
-
-
-/* #welcomePage {
-    background-color: rgb(236, 236, 41);
-} */
 
 button {
     cursor: pointer;
@@ -61,6 +44,9 @@ button:hover {
     opacity: 0.5;
 }
 
+
+/* button to about page */
+
 #myBtn {
     padding: 0;
     background-color: rgba(0, 0, 0, 0.0);
@@ -74,16 +60,31 @@ button:hover {
     cursor: pointer;
 }
 
+h1 {
+    padding: 20px 0;
+    font-size: 40px;
+}
+
+p {
+    font-weight: normal;
+}
+
+label {
+    margin: 10px 20px;
+}
+
+span {
+    overflow: hidden;
+    padding: 0 4px 0 6px;
+    margin-left: 30px;
+}
+
 
 /* menu-items */
 
 ul {
-    /* list-style-type: none; */
-    /* height: 15px; */
-    /* line-height: 5px; */
     margin: 10px;
     margin-top: 20px;
-    /* padding: 0px; */
     background-color: rgb(231, 231, 82);
     color: black;
     font-size: 20px;
@@ -99,16 +100,6 @@ li {
 
 li:hover {
     font-weight: bold;
-}
-
-h1 {
-    /* margin: 20px 0; */
-    padding: 20px 0;
-    font-size: 40px;
-}
-
-p {
-    font-weight: normal;
 }
 
 
@@ -132,13 +123,6 @@ p {
     font-family: 'Play', sans-serif;
 }
 
-label {
-    /* margin-left: 20px;
-    margin-right: 20px; */
-    margin: 10px 20px;
-    /* text-align: left; */
-}
-
 
 /* register form */
 
@@ -155,15 +139,6 @@ form {
     box-sizing: border-box
 }
 
-
-/* Add padding to containers */
-
-
-/* .container {
-    padding: 16px;
-    max-width: 20px;
-} */
-
 input[type=text],
 input[type=password],
 input[type=email],
@@ -174,24 +149,10 @@ select {
     padding: 12px;
     margin: 15px 5px 0 10px;
     display: inline-block;
-    /* float: left; */
     border: solid 1px;
     border-color: #b1b1b1;
     background: #f1f1f1;
     border-radius: 10px;
-}
-
-
-/* label {
-    display: inline-block;
-    float: inherit
-} */
-
-span {
-    /* display: inline-block; */
-    overflow: hidden;
-    padding: 0 4px 0 6px;
-    margin-left: 30px;
 }
 
 select {
@@ -218,9 +179,6 @@ hr {
     opacity: 1;
 }
 
-
-/* Set a grey background color and center the text of the "sign in" section */
-
 #signin_from_register,
 #register_from_login {
     background-color: rgba(0, 0, 0, 0.0);
@@ -230,6 +188,16 @@ hr {
     text-decoration: underline;
     font-size: 22px;
     padding: 5px 5px;
+}
+
+.errors {
+    color: red;
+    font-weight: bolder;
+    min-height: 20px;
+    margin-top: 0px;
+    /* display: block; */
+    font-size: 12px;
+    /* height: 18px; */
 }
 
 
@@ -281,7 +249,7 @@ select {
 }
 
 
-/* ABOUT */
+/* about-page */
 
 
 /* The Modal (background) */
@@ -344,19 +312,12 @@ select {
     cursor: pointer;
 }
 
+
+/* game-page */
+
 canvas {
     border-radius: 15px;
     width: 98%;
-}
-
-.errors {
-    color: red;
-    font-weight: bolder;
-    min-height: 20px;
-    margin-top: 0px;
-    /* display: block; */
-    font-size: 12px;
-    /* height: 18px; */
 }
 
 #lblScore,
@@ -370,7 +331,6 @@ canvas {
 .food_colors,
 .arrows {
     display: inline-block;
-    /* text-align: left; */
 }
 
 #choose_food_colors {
@@ -393,6 +353,9 @@ canvas {
     margin-left: 8px;
 }
 
+
+/* footer */
+
 .footer {
     position: relative;
     left: 0;
@@ -400,15 +363,4 @@ canvas {
     width: 100%;
     color: white;
     text-align: center;
-    /* height: 200px;
-    margin-top: -200px; */
 }
-
-
-/* .footer {
-    clear: both;
-    position: relative;
-    height: 200px;
-    margin-top: -200px;
-    color: white;
-} */

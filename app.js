@@ -106,7 +106,6 @@ function StartGame() {
     window.clearInterval(gift_interval);
     window.clearInterval(gift2_interval);
     pacman_lives = 5;
-    // pacman_lives.src = "images\
     initialGameBoard();
     score = 0;
     pac_color = "yellow";
@@ -187,58 +186,32 @@ function createWalls() {
         }
     }
 
-    // board[1][5] = 4;
     board[1][8] = 4;
     board[2][2] = 4;
     board[2][3] = 4;
     board[2][5] = 4;
-    // board[2][7] = 4;
-    // board[2][8] = 4;
-    // board[2][9] = 4;
     board[3][2] = 4;
     board[3][5] = 4;
     board[3][6] = 4;
     board[3][7] = 4;
     board[3][8] = 4;
-    // board[3][9] = 4;
     board[4][5] = 4;
-    // board[4][6] = 4;
-    // board[4][8] = 4;
     board[5][2] = 4;
     board[5][3] = 4;
     board[5][5] = 4;
-    // board[5][6] = 4;
-    // board[5][7] = 4;
     board[5][8] = 4;
     board[5][9] = 4;
     board[6][3] = 4;
     board[6][5] = 4;
-    // board[6][7] = 4;
-    // board[7][2] = 4;
     board[7][3] = 4;
-    // board[7][4] = 4;
-    // board[7][5] = 4;
-    // board[7][6] = 4;
     board[7][7] = 4;
     board[7][8] = 4;
-    // board[7][9] = 4;
     board[8][3] = 4;
-    // board[8][4] = 4;
     board[8][5] = 4;
-    // board[8][6] = 4;
-    // board[8][7] = 4;
     board[8][8] = 4;
-    // board[8][9] = 4;
     board[9][1] = 4;
-    // board[9][2] = 4;
     board[9][3] = 4;
-    // board[9][5] = 4;
-    // board[9][6] = 4;
-    // board[9][7] = 4;
     board[9][8] = 4;
-    // board[9][9] = 4;
-
-    // board[10][13] = 4;
 
     for (var i = 1; i < board_size / 2; i++) {
         let index = 1;
@@ -347,7 +320,6 @@ function Draw() {
 
 function draw_monster(monster_index) { //put a picture
     let monster = monsters[monster_index];
-    // context.drawImage(monster.image, monster.x - cell_width / 2, monster.y - cell_height / 2, cell_width / 1.2, cell_height / 1.2);
     context.drawImage(monster.image, cell_height * monster.x, cell_width * monster.y, cell_height, cell_width)
 }
 
@@ -509,8 +481,6 @@ function UpdatePacmanPosition() {
         gift.sound.volume = 0.3;
         gift.sound.play();
         context.clearRect(cell_height * gift.x, cell_width * gift.y, cell_height, cell_width);
-        // gift.image.style.display = "none";
-        // gift.image.parentNode.removeChild(gift.image);
         window.clearInterval(gift_interval)
     } else if (gift2.x == shape.i && gift2.y == shape.j && gift2.show) {
         pacman_lives += 1
@@ -519,8 +489,6 @@ function UpdatePacmanPosition() {
         gift2.sound.play();
         context.clearRect(cell_height * gift2.x, cell_width * gift2.y, cell_height, cell_width);
         document.getElementById('lives').innerHTML = "Lives : " + pacman_lives;
-        // gift.image.style.display = "none";
-        // gift.image.parentNode.removeChild(gift.image);
         window.clearInterval(gift2_interval)
     }
     var currentTime = new Date();
@@ -552,9 +520,6 @@ function UpdatePacmanPosition() {
 }
 
 function getMonsterDirection(monsterIndex) { //decide which direction to go according to pacman and update position in board
-    // monster_position = monsters_positions[monsterIndex];
-    // monster_x = monster_position[0];
-    // monster_y = monster_position[1];
     let monster = monsters[monsterIndex]
     let direction = new Array()
 
@@ -574,8 +539,6 @@ function getMonsterDirection(monsterIndex) { //decide which direction to go acco
     }
     var randomNum = Math.floor(Math.random() * (direction.length - 1 + 1))
     return direction[randomNum];
-
-
 }
 
 function UpdateMonstersPosition() {
@@ -585,23 +548,16 @@ function UpdateMonstersPosition() {
 
         if (direction == 1) { //up
             monster.y--;
-            // // monster_board[monster.x][monster.y - 1] = 6;
-            // monster_board[monster.x][monster.y] = 0;
 
         } else if (direction == 2) { //down
-            // monster_board[monster.x][monster.y + 1] = 6;
-            // monster_board[monster.x][monster.y] = 0;
             monster.y++;
+
         } else if (direction == 3) { //left
-            // monster_board[monster.x - 1][monster.y] = 6;
-            // monster_board[monster.x][monster.y] = 0;
             monster.x--;
+
         } else if (direction == 4) { //right
-            // monster_board[monster.x + 1][monster.y] = 6;
-            // monster_board[monster.x][monster.y] = 0;
             monster.x++;
         }
-        // monsters_positions[i] = (monster.x, monster.y);
         if (monster.x == shape.i && monster.y == shape.j) {
             kill_sound.volume = 0.2;
             kill_sound.play();
@@ -609,12 +565,7 @@ function UpdateMonstersPosition() {
             Draw();
             return;
         }
-
-
     }
-    // Draw();
-
-
 }
 
 function getGiftDirection(curr_gift) { //decide which direction to go according to pacman and update position in board
@@ -657,28 +608,17 @@ function UpdateGiftPosition() {
         direction = getGiftDirection(gift)
         if (direction == 1) { //up
             gift.y--;
-            // // monster_board[monster.x][monster.y - 1] = 6;
-            // monster_board[monster.x][monster.y] = 0;
-
         }
+
         if (direction == 2) { //down
-            // monster_board[monster.x][monster.y + 1] = 6;
-            // monster_board[monster.x][monster.y] = 0;
             gift.y++;
         }
         if (direction == 3) { //left
-            // monster_board[monster.x - 1][monster.y] = 6;
-            // monster_board[monster.x][monster.y] = 0;
             gift.x--;
         }
         if (direction == 4) { //right
-            // monster_board[monster.x + 1][monster.y] = 6;
-            // monster_board[monster.x][monster.y] = 0;
             gift.x++;
         }
-        // gift.x = chosen_direction[0];
-        // gift.y = chosen_direction[1];
-        // draw_gift();
         Draw();
     } else {
         gift.show = false
@@ -706,28 +646,19 @@ function UpdateGift2Position() {
         direction = getGiftDirection(gift2)
         if (direction == 1) { //up
             gift2.y--;
-            // // monster_board[monster.x][monster.y - 1] = 6;
-            // monster_board[monster.x][monster.y] = 0;
-
         }
+
         if (direction == 2) { //down
-            // monster_board[monster.x][monster.y + 1] = 6;
-            // monster_board[monster.x][monster.y] = 0;
             gift2.y++;
         }
+
         if (direction == 3) { //left
-            // monster_board[monster.x - 1][monster.y] = 6;
-            // monster_board[monster.x][monster.y] = 0;
             gift2.x--;
         }
+
         if (direction == 4) { //right
-            // monster_board[monster.x + 1][monster.y] = 6;
-            // monster_board[monster.x][monster.y] = 0;
             gift2.x++;
         }
-        // gift.x = chosen_direction[0];
-        // gift.y = chosen_direction[1];
-        // draw_gift();
         Draw();
     } else {
         gift2.show = false
@@ -749,7 +680,6 @@ function killPacman(is_strong) {
             pacman_lives -= 2;
             continueGame();
             initialGamePage();
-            // audio.pause();
             return
         } else {
             alert("Loser")
@@ -761,14 +691,11 @@ function killPacman(is_strong) {
             pacman_lives--;
             continueGame();
             initialGamePage();
-            // audio.pause();
             return
         } else {
             alert("Loser!")
         }
     }
-
-    // audio.pause();
     return
 }
 
@@ -776,12 +703,12 @@ function continueGame() {
     audio.play();
     audio.volume = 0.05;
 
-
     for (var i = 0; i < monstersAmount; i++) {
         cell = positions[i];
         monsters[i].x = cell[0];
         monsters[i].y = cell[1];
     }
+
     board[shape.i][shape.j] = 0;
     new_position = findRandomEmptyCellForPacman(board)
     shape.i = new_position[0]
@@ -791,9 +718,6 @@ function continueGame() {
     monsters_interval = setInterval(UpdateMonstersPosition, 450);
     gift_interval = setInterval(UpdateGiftPosition, 400);
     gift2_interval = setInterval(UpdateGift2Position, 400);
-
-
-
     Draw()
 }
 
@@ -827,104 +751,11 @@ function switchDivs(divId) {
 
 }
 
-
 function hide(divId) {
     $('#' + divId).hide();
 }
 
-/* birthDay form */
-
-// var Days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // index => month [0-11]
-// $(document).ready(function() {
-//     var option = '<option value="day">day</option>';
-//     var selectedDay = "day";
-//     for (var i = 1; i <= Days[0]; i++) { //add option days
-//         option += '<option value="' + i + '">' + i + '</option>';
-//     }
-//     $('#day').append(option);
-//     $('#day').val(selectedDay);
-
-//     var option = '<option value="month">month</option>';
-//     var selectedMon = "month";
-//     for (var i = 1; i <= 12; i++) {
-//         option += '<option value="' + i + '">' + i + '</option>';
-//     }
-//     $('#month').append(option);
-//     $('#month').val(selectedMon);
-
-//     var option = '<option value="month">month</option>';
-//     var selectedMon = "month";
-//     for (var i = 1; i <= 12; i++) {
-//         option += '<option value="' + i + '">' + i + '</option>';
-//     }
-//     $('#month2').append(option);
-//     $('#month2').val(selectedMon);
-
-//     var d = new Date();
-//     var option = '<option value="year">year</option>';
-//     selectedYear = "year";
-//     for (var i = 1930; i <= d.getFullYear(); i++) { // years start i
-//         option += '<option value="' + i + '">' + i + '</option>';
-//     }
-//     $('#year').append(option);
-//     $('#year').val(selectedYear);
-// });
-
-// function isLeapYear(year) {
-//     year = parseInt(year);
-//     if (year % 4 != 0) {
-//         return false;
-//     } else if (year % 400 == 0) {
-//         return true;
-//     } else if (year % 100 == 0) {
-//         return false;
-//     } else {
-//         return true;
-//     }
-// }
-
-// function change_year(select) {
-//     if (isLeapYear($(select).val())) {
-//         Days[1] = 29;
-
-//     } else {
-//         Days[1] = 28;
-//     }
-//     if ($("#month").val() == 2) {
-//         var day = $('#day');
-//         var val = $(day).val();
-//         $(day).empty();
-//         var option = '<option value="day">day</option>';
-//         for (var i = 1; i <= Days[1]; i++) { //add option days
-//             option += '<option value="' + i + '">' + i + '</option>';
-//         }
-//         $(day).append(option);
-//         if (val > Days[month]) {
-//             val = 1;
-//         }
-//         $(day).val(val);
-//     }
-// }
-
-// function change_month(select) {
-//     var day = $('#day');
-//     var val = $(day).val();
-//     $(day).empty();
-//     var option = '<option value="day">day</option>';
-//     var month = parseInt($(select).val()) - 1;
-//     for (var i = 1; i <= Days[month]; i++) { //add option days
-//         option += '<option value="' + i + '">' + i + '</option>';
-//     }
-//     $(day).append(option);
-//     if (val > Days[month]) {
-//         val = 1;
-//     }
-//     $(day).val(val);
-// }
-
 function updateGridDetails() {
-
-
     checkKeyValidation(document.getElementById("up").value, "up")
     checkKeyValidation(document.getElementById("down").value, "down")
     checkKeyValidation(document.getElementById("left").value, "left")
@@ -937,7 +768,6 @@ function updateGridDetails() {
     food_remain = document.getElementById("foodNum").value;
     if (food_remain.length == 0) {
         food_remain = Math.floor(Math.random() * (90 - 50 + 1)) + 50; //change in other functions 
-        // alert("number of monsters chosen randomly")
     } else if (food_remain > 90 || food_remain < 50) {
         alert("food is between 50 to 90")
         return false;
@@ -946,18 +776,12 @@ function updateGridDetails() {
     time_limit = document.getElementById("timeLeft").value;
     if (time_limit < 60) {
         time_limit = 60;
-        // alert("minimum time is 60 sec")
-        // return false;
     }
     monstersAmount = document.getElementById("monsters").value;
     if (monstersAmount.length == 0) {
         monstersAmount = Math.floor(Math.random * 4) + 1;
-        // alert("number of monsters chosen randomly")
     }
-    // } else if (monstersAmount > 90 || monstersAmount < 50) {
-    //     // alert("monsters is between 1 to 4")
-    //     return false;
-    // }
+
     color1 = document.getElementById("ball1").value;
     color2 = document.getElementById("ball2").value;
     color3 = document.getElementById("ball3").value;
@@ -984,8 +808,6 @@ function displayKeyCode(event, number) {
         rightkey = event.keyCode;
     }
     document.getElementById(id).value = event.key;
-    // var char = event.which || event.keyCode;
-
 }
 
 function randomize() {
@@ -1032,22 +854,7 @@ function checkKeyValidation(key, role) {
         else if (role == 'left') leftkey = "ArrowLeft"
         else if (role == 'right') rightkey = "ArrowRight"
 
-    }
-
-    // if((/[0-9a-zA-Z]+$/).test(key))
-    // if (role == 'up') upkey = getKeyCode(key)
-    // else if (role == 'down') downkey = getKeyCode(key)
-    // else if (role == 'left') leftkey = getKeyCode(key)
-    // else if (role == 'right') rightkey = getKeyCode(key)
-    // if (role == 'up') upkey = String.fromCharCode(key)
-    // else if (role == 'down') downkey = String.fromCharCode(key)
-    // else if (role == 'left') leftkey = String.fromCharCode(key)
-    // else if (role == 'right') rightkey = String.fromCharCode(key)
-    // return true;
-    // } //check with non letters input
-    // else if (key.length == 0) {
-    // alert("defult key chosen for " + role + " key");
-    else {
+    } else {
         if (role == 'up') upkey = key
         else if (role == 'down') downkey = key
         else if (role == 'left') leftkey = key
@@ -1223,7 +1030,7 @@ $("#aboutPage").ready(function() {
 
     var modal = document.getElementById("myModal");
 
-    // // Get the button that opens the modal
+    // Get the button that opens the modal
     var btn = document.getElementById("myBtn");
 
     // Get the <span> element that closes the modal
@@ -1279,7 +1086,6 @@ function draw_balls(color, score) {
     scoreCanvas.font = "15px Ariel bold";
     res = hexToRgb(color)
     scoreCanvas.fillStyle = get_brightness(res.r, res.g, res.b)
-        // scoreCanvas.fillStyle = "white"
     scoreCanvas.fillText(score, ball_position - 5, 30 - 3);
     ball_position += 100
 }
