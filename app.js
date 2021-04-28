@@ -500,27 +500,28 @@ function UpdatePacmanPosition() {
             kill_sound.play();
             killPacman(monster.is_strong);
             return
-        } else if (gift.x == shape.i && gift.y == shape.j && gift.show) {
-            score += 50;
-            gift.show = false;
-            gift.sound.volume = 0.3;
-            gift.sound.play();
-            context.clearRect(cell_height * gift.x, cell_width * gift.y, cell_height, cell_width);
-            // gift.image.style.display = "none";
-            // gift.image.parentNode.removeChild(gift.image);
-            window.clearInterval(gift_interval)
-        } else if (gift2.x == shape.i && gift2.y == shape.j && gift2.show) {
-            pacman_lives += 1
-            gift2.show = false;
-            gift2.sound.volume = 0.3;
-            gift2.sound.play();
-            context.clearRect(cell_height * gift2.x, cell_width * gift2.y, cell_height, cell_width);
-            document.getElementById('lives').innerHTML = "Lives : " + pacman_lives;
-            // gift.image.style.display = "none";
-            // gift.image.parentNode.removeChild(gift.image);
-            window.clearInterval(gift2_interval)
         }
 
+    }
+    if (gift.x == shape.i && gift.y == shape.j && gift.show) {
+        score += 50;
+        gift.show = false;
+        gift.sound.volume = 0.3;
+        gift.sound.play();
+        context.clearRect(cell_height * gift.x, cell_width * gift.y, cell_height, cell_width);
+        // gift.image.style.display = "none";
+        // gift.image.parentNode.removeChild(gift.image);
+        window.clearInterval(gift_interval)
+    } else if (gift2.x == shape.i && gift2.y == shape.j && gift2.show) {
+        pacman_lives += 1
+        gift2.show = false;
+        gift2.sound.volume = 0.3;
+        gift2.sound.play();
+        context.clearRect(cell_height * gift2.x, cell_width * gift2.y, cell_height, cell_width);
+        document.getElementById('lives').innerHTML = "Lives : " + pacman_lives;
+        // gift.image.style.display = "none";
+        // gift.image.parentNode.removeChild(gift.image);
+        window.clearInterval(gift2_interval)
     }
     var currentTime = new Date();
     time_elapsed = (currentTime - start_time) / 1000;
