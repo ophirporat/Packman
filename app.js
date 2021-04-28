@@ -1254,9 +1254,7 @@ $("#aboutPage").ready(function() {
 });
 
 function get_brightness(r, g, b) {
-    var brightness = Math.round(parseInt(r) +
-        parseInt(g) +
-        parseInt(b));
+    var brightness = Math.round(parseInt(r) + parseInt(g) + parseInt(b));
     text_color = (brightness > 400) ? 'black' : 'white';
     return text_color
 }
@@ -1279,7 +1277,7 @@ function draw_balls(color, score) {
     scoreCanvas.fillStyle = color; //color
     scoreCanvas.fill();
     scoreCanvas.font = "15px Ariel bold";
-    res = hexToRgb(color2)
+    res = hexToRgb(color)
     scoreCanvas.fillStyle = get_brightness(res.r, res.g, res.b)
         // scoreCanvas.fillStyle = "white"
     scoreCanvas.fillText(score, ball_position - 5, 30 - 3);
