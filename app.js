@@ -445,6 +445,7 @@ function create_gift() {
     clock.image.src = "images/clock.png";
     clock.show = false;
     clock.start = Math.random() * 50
+    clock.eaten = false
 
 }
 
@@ -481,6 +482,15 @@ function UpdatePacmanPosition() {
     if (board[shape.i][shape.j] == 5) {
         score += 25;
     }
+    if (clock.x == shape.i && clock.y == shape.j && clock.show && !clock.eaten) {
+        clock.show = false;
+        clock.eaten = true
+        time_limit = parseInt(time_limit) + 10
+        document.getElementById('game_duration').innerHTML = "Game duration : " + time_limit
+        clock.sound.volume = 0.3;
+        clock.sound.play();
+        context.clearRect(cell_height * clock.x, cell_width * clock.y, cell_height, cell_width);
+    }
     board[shape.i][shape.j] = 2;
     document.getElementById("lblScore").value = score;
     for (var i = 0; i < monstersAmount; i++) {
@@ -510,18 +520,11 @@ function UpdatePacmanPosition() {
             // gift.image.parentNode.removeChild(gift.image);
             window.clearInterval(gift2_interval)
         }
-        if (clock.x == shape.i && clock.y == shape.j && clock.show) {
-            time_limit = parseInt(time_limit) + 10
-            document.getElementById('game_duration').innerHTML = "Game duration : " + time_limit
-            clock.show = false;
-            clock.sound.volume = 0.3;
-            clock.sound.play();
-            context.clearRect(cell_height * clock.x, cell_width * clock.y, cell_height, cell_width);
-        }
+
     }
     var currentTime = new Date();
     time_elapsed = (currentTime - start_time) / 1000;
-    if (clock.start <= time_elapsed && clock.start + 20 > time_elapsed) { clock.show = true; } else { clock.show = false }
+    if (clock.start <= time_elapsed && clock.start + 20 > time_elapsed && !clock.eaten) { clock.show = true; } else { clock.show = false }
     if (time_elapsed >= time_limit + 10) {
         audio.volume = 0.05;
         clock_ticking.volume = 0.95
@@ -1255,7 +1258,7 @@ function get_brightness(r, g, b) {
     var brightness = Math.round(parseInt(r) +
         parseInt(g) +
         parseInt(b));
-    text_color = (brightness > 375) ? 'black' : 'white';
+    text_color = (brightness > 400) ? 'black' : 'white';
     return text_color
 }
 
@@ -1280,6 +1283,6 @@ function draw_balls(color, score) {
     res = hexToRgb(color2)
     scoreCanvas.fillStyle = get_brightness(res.r, res.g, res.b)
         // scoreCanvas.fillStyle = "white"
-    scoreCanvas.fillText(score, ball_position - 5, 30 + 3);
+    scoreCanvas.fillText(score, ball_position - 5, 30 - 3);
     ball_position += 100
 }
