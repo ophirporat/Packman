@@ -172,7 +172,7 @@ function StartGame() {
     );
     ball_position = 190
     pacman_interval = setInterval(UpdatePacmanPosition, 150);
-    monsters_interval = setInterval(UpdateMonstersPosition, 500);
+    monsters_interval = setInterval(UpdateMonstersPosition, 450);
     gift_interval = setInterval(UpdateGiftPosition, 400);
     gift2_interval = setInterval(UpdateGift2Position, 400);
 }
@@ -582,6 +582,26 @@ function UpdateMonstersPosition() {
     for (var i = 0; i < monstersAmount; i++) {
         let direction = getMonsterDirection(i);
         let monster = monsters[i];
+
+        if (direction == 1) { //up
+            monster.y--;
+            // // monster_board[monster.x][monster.y - 1] = 6;
+            // monster_board[monster.x][monster.y] = 0;
+
+        } else if (direction == 2) { //down
+            // monster_board[monster.x][monster.y + 1] = 6;
+            // monster_board[monster.x][monster.y] = 0;
+            monster.y++;
+        } else if (direction == 3) { //left
+            // monster_board[monster.x - 1][monster.y] = 6;
+            // monster_board[monster.x][monster.y] = 0;
+            monster.x--;
+        } else if (direction == 4) { //right
+            // monster_board[monster.x + 1][monster.y] = 6;
+            // monster_board[monster.x][monster.y] = 0;
+            monster.x++;
+        }
+        // monsters_positions[i] = (monster.x, monster.y);
         if (monster.x == shape.i && monster.y == shape.j) {
             kill_sound.volume = 0.2;
             kill_sound.play();
@@ -589,32 +609,10 @@ function UpdateMonstersPosition() {
             Draw();
             return;
         }
-        if (direction == 1) { //up
-            monster.y--;
-            // // monster_board[monster.x][monster.y - 1] = 6;
-            // monster_board[monster.x][monster.y] = 0;
-
-        }
-        if (direction == 2) { //down
-            // monster_board[monster.x][monster.y + 1] = 6;
-            // monster_board[monster.x][monster.y] = 0;
-            monster.y++;
-        }
-        if (direction == 3) { //left
-            // monster_board[monster.x - 1][monster.y] = 6;
-            // monster_board[monster.x][monster.y] = 0;
-            monster.x--;
-        }
-        if (direction == 4) { //right
-            // monster_board[monster.x + 1][monster.y] = 6;
-            // monster_board[monster.x][monster.y] = 0;
-            monster.x++;
-        }
-        // monsters_positions[i] = (monster.x, monster.y);
 
 
     }
-    Draw();
+    // Draw();
 
 
 }
@@ -790,7 +788,7 @@ function continueGame() {
     shape.j = new_position[1]
     board[shape.i][shape.j] = 2
     pacman_interval = setInterval(UpdatePacmanPosition, 150);
-    monsters_interval = setInterval(UpdateMonstersPosition, 500);
+    monsters_interval = setInterval(UpdateMonstersPosition, 450);
     gift_interval = setInterval(UpdateGiftPosition, 400);
     gift2_interval = setInterval(UpdateGift2Position, 400);
 
