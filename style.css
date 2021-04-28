@@ -14,6 +14,10 @@ body {
     background-size: cover;
 }
 
+#header_names {
+    color: white;
+}
+
 
 /* #header {
     width: 100%;
@@ -207,7 +211,7 @@ hr {
 
 .registerbtn {
     /* padding: 16px 20px; */
-    margin: 0 0 0 25%;
+    margin: 0 0 0 30%;
 }
 
 .registerbtn:hover {
@@ -232,7 +236,7 @@ hr {
 /* login page */
 
 .loginbtns {
-    margin: 0 0 0 15%;
+    margin: 0 0 0 25%;
 }
 
 
